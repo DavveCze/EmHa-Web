@@ -1,0 +1,114 @@
+# ==============================================================================
+# EmHa Elektro — .gitignore
+# React 19 + Vite 7 + Tailwind CSS v4
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. Závislosti balíčků (Node / npm)
+# ------------------------------------------------------------------------------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+.pnpm-store/
+
+# ------------------------------------------------------------------------------
+# 2. Výstupy sestavení a produkční balíčky (Build artifacts)
+# ------------------------------------------------------------------------------
+dist/
+dist-ssr/
+build/
+out/
+.prerender/
+
+# ------------------------------------------------------------------------------
+# 3. Vyrovnávací paměť nástrojů (Caches)
+# ------------------------------------------------------------------------------
+.vite/
+.cache/
+.parcel-cache/
+.eslintcache
+.stylelintcache
+*.tsbuildinfo
+.turbo/
+
+# ------------------------------------------------------------------------------
+# 4. Proměnné prostředí a citlivá data (Secrets & Privacy)
+# ------------------------------------------------------------------------------
+# Ignorovat reálné konfigurační a lokální env soubory
+.env
+.env.local
+.env.*.local
+
+# Výjimka: šablona proměnných prostředí pro vývojáře musí zůstat verzována
+!.env.example
+
+# Klíče, certifikáty a autentizační tokeny
+*.pem
+*.key
+*.cert
+*.crt
+*.pfx
+*.p12
+
+# Zálohy, dumpy a exporty (prevence úniku osobních údajů z poptávek/databáze)
+*.sql
+*.sqlite
+*.dump
+*.csv.export
+
+# ------------------------------------------------------------------------------
+# 5. Editory a vývojová prostředí (IDEs & OS)
+# ------------------------------------------------------------------------------
+# JetBrains (WebStorm, IntelliJ IDEA)
+.idea/
+*.iws
+*.iml
+
+# Visual Studio Code: ignorovat lokální cache/historii, zachovat týmové konfigurace
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Ostatní editory
+*.sublime-workspace
+*.sublime-project
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+*.swo
+*~
+
+# Operační systémy (macOS, Windows, Linux)
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+[Dd]esktop.ini
+
+# ------------------------------------------------------------------------------
+# 6. Testování, pokrytí kódu a E2E (Testing & QA)
+# ------------------------------------------------------------------------------
+coverage/
+.nyc_output/
+test-results/
+playwright-report/
+blob-report/
+cypress/videos/
+cypress/screenshots/
+
+# ------------------------------------------------------------------------------
+# 7. Dočasné soubory, scratch a asistentní skripty
+# ------------------------------------------------------------------------------
+scratch/
+*.tmp
+*.temp

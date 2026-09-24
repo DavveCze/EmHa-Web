@@ -1,0 +1,11 @@
+{
+  "enabled": true,
+  "formatOnWrite": true,
+  "timeoutSeconds": 240,
+  "commands": [
+    "npm run lint",
+    "npm run typecheck",
+    "npm run test -- --run",
+    "npm run build"
+  ]
+}
