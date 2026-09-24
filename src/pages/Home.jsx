@@ -1,19 +1,213 @@
-function Home() {
+import { useNavigation } from '../context/navigation-core.js'
+import HeroSlider from '../components/HeroSlider.jsx'
+import ProcessSection from '../components/ProcessSection.jsx'
+import Gallery from '../components/Gallery.jsx'
+import InquiryForm from '../components/InquiryForm.jsx'
+
+export default function Home() {
+  const { navigate } = useNavigation()
+
+  const handleLink = (e, path) => {
+    e.preventDefault()
+    navigate(path)
+  }
+
   return (
-    <main className="min-h-screen bg-slate-950 px-6 py-16 text-slate-100">
-      <div className="mx-auto flex max-w-3xl flex-col gap-6">
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-300">
-          EmHa
-        </p>
-        <h1 className="text-4xl font-bold tracking-tight sm:text-6xl">
-          Your React project is ready.
-        </h1>
-        <p className="max-w-xl text-lg leading-8 text-slate-300">
-          Start building your next page in <code className="text-cyan-300">src/pages</code>.
-        </p>
-      </div>
+    <main id="main">
+      <HeroSlider />
+
+      <section className="intro container" aria-label="Naše výhody">
+        <div className="benefits">
+          <div>
+            <h3>Od návrhu po dokončení</h3>
+            <p>Vše potřebné pro vaši elektroinstalaci.</p>
+          </div>
+          <div>
+            <h3>Konzultace zdarma</h3>
+            <p>Nejdřív si společně projdeme váš záměr.</p>
+          </div>
+          <div>
+            <h3>Ostrava a okolí</h3>
+            <p>Pro byty, rodinné domy i menší opravy.</p>
+          </div>
+        </div>
+
+        <div className="service-heading">
+          <h3>S čím vám pomůžeme?</h3>
+          <p>Vyberte, co právě řešíte.</p>
+        </div>
+
+        <div className="service-tiles">
+          <a
+            className="service-tile"
+            href="/elektroinstalace"
+            onClick={(e) => handleLink(e, '/elektroinstalace')}
+          >
+            <svg className="icon" aria-hidden="true" viewBox="0 0 24 24">
+              <path d="m13 2-9 12h7l-1 8 10-13h-7z" />
+            </svg>
+            <span>
+              <strong>Elektroinstalace</strong>
+              <span>Rozvody pro nový domov</span>
+            </span>
+            <span className="arrow">↗</span>
+          </a>
+
+          <a
+            className="service-tile"
+            href="/rekonstrukce"
+            onClick={(e) => handleLink(e, '/rekonstrukce')}
+          >
+            <svg className="icon" aria-hidden="true" viewBox="0 0 24 24">
+              <path d="m2 11 10-9 10 9M5 9v13h5v-8h4v8h5V9M16 5V2h3v6" />
+            </svg>
+            <span>
+              <strong>Rekonstrukce</strong>
+              <span>Nová elektřina ve stávajícím bydlení</span>
+            </span>
+            <span className="arrow">↗</span>
+          </a>
+
+          <a
+            className="service-tile"
+            href="/zabezpeceni"
+            onClick={(e) => handleLink(e, '/zabezpeceni')}
+          >
+            <svg className="icon" aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M12 2 3 6v6c0 5 9 10 9 10s9-5 9-10V6zM7 11l3 3 7-7" />
+            </svg>
+            <span>
+              <strong>Zabezpečení</strong>
+              <span>Alarmy a kamerové systémy</span>
+            </span>
+            <span className="arrow">↗</span>
+          </a>
+        </div>
+      </section>
+
+      <section className="section sage">
+        <div className="container">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">Elektroinstalace od základu</p>
+              <h2>
+                Od rozvodů
+                <br />
+                po poslední zásuvku.
+              </h2>
+            </div>
+            <p>
+              Kam přijde lampa? A kde bude stůl?
+              <br />
+              Projdeme s vámi i běžné detaily,
+              <br />
+              aby zásuvky byly tam, kde je potřebujete.
+            </p>
+          </div>
+
+          <div className="feature-cards">
+            <a
+              className="feature-card"
+              href="/elektroinstalace"
+              onClick={(e) => handleLink(e, '/elektroinstalace')}
+            >
+              <div className="feature-image">
+                <img
+                  src="/assets/new-build.jpg"
+                  alt="Montáž vypínače – ilustrační vizuál"
+                  loading="lazy"
+                />
+                <span className="tag">Od základu</span>
+              </div>
+              <h3>
+                Elektroinstalace v novostavbách <span>↗</span>
+              </h3>
+              <p>
+                Rozvody, rozvaděče, zásuvky a osvětlení.
+                <br />
+                Pomůžeme promyslet i to, co vás zatím nenapadlo.
+              </p>
+            </a>
+
+            <a
+              className="feature-card"
+              href="/rekonstrukce"
+              onClick={(e) => handleLink(e, '/rekonstrukce')}
+            >
+              <div className="feature-image">
+                <img
+                  src="/assets/renovation.jpg"
+                  alt="Práce na elektroinstalaci – ilustrační vizuál"
+                  loading="lazy"
+                />
+                <span className="tag">S novou energií</span>
+              </div>
+              <h3>
+                Rekonstrukce bytů a domů <span>↗</span>
+              </h3>
+              <p>
+                Staré rozvody vyměníme a nové přizpůsobíme tomu,
+                <br />
+                jak doma žijete. Včetně zásuvek, vypínačů a světel.
+              </p>
+            </a>
+          </div>
+
+          <div className="small-services">
+            <h3>
+              A také drobnosti,
+              <br />
+              na kterých záleží.
+            </h3>
+            <div>
+              <a
+                href="/opravy-a-servis"
+                onClick={(e) => handleLink(e, '/opravy-a-servis')}
+              >
+                <strong>Opravy a servis ↗</strong>
+                <span>Zásuvky, vypínače, osvětlení</span>
+              </a>
+              <a
+                href="/data-a-slaboproud"
+                onClick={(e) => handleLink(e, '/data-a-slaboproud')}
+              >
+                <strong>Data a slaboproud ↗</strong>
+                <span>Datové zásuvky a domácí síť</span>
+              </a>
+              <a
+                href="/zabezpeceni-a-automatizace"
+                onClick={(e) => handleLink(e, '/zabezpeceni-a-automatizace')}
+              >
+                <strong>Zabezpečení a automatizace ↗</strong>
+                <span>Ochrana domácnosti a scénáře Ajax</span>
+              </a>
+              <a
+                href="/na-co-myslet-pri-rekonstrukcich"
+                onClick={(e) => handleLink(e, '/na-co-myslet-pri-rekonstrukcich')}
+              >
+                <strong>Na co myslet při rekonstrukcích ↗</strong>
+                <span>Průvodce plánováním elektroinstalace</span>
+              </a>
+            </div>
+          </div>
+
+          <p className="fine-note">
+            ✓ &nbsp;Revize a projektovou dokumentaci zajistíme ve spolupráci s revizním technikem a
+            projektantem.
+          </p>
+        </div>
+      </section>
+
+      <ProcessSection variant="home" />
+
+      <Gallery />
+
+      <InquiryForm
+        eyebrow="Pojďme se domluvit"
+        title="S čím Vám pomůžeme?"
+        showWorkerPhoto
+        isHome
+      />
     </main>
   )
 }
-
-export default Home
