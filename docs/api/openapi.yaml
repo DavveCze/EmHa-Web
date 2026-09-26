@@ -1,0 +1,197 @@
+openapi: 3.1.0
+info:
+  title: EmHa Elektro — Public Inquiry API Contract
+  version: 1.0.0
+  description: >
+    Oficiální API kontrakt pro příjem veřejných poptávek elektroinstalací
+    a servisních požadavků z webu EmHa Elektro na FORPSI Linux hostingu.
+servers:
+  - url: https://emha-elektro.cz
+    description: Produkční server (FORPSI Linux hosting)
+  - url: http://localhost:5173
+    description: Lokální vývojové prostředí
+
+paths:
+  /api/contact.php:
+    post:
+      summary: Odeslání nezávazné poptávky elektroinstalace
+      description: >
+        Veřejný endpoint pro zpracování poptávkového formuláře. Zahrnuje
+        server-side validaci, ochranu proti spamu (honeypot + time-trap),
+        rate-limiting a odeslání notifikací administrátorovi a klientovi.
+      operationId: submitInquiry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InquiryRequest'
+            examples:
+              standard_inquiry:
+                summary: Běžná poptávka rekonstrukce bytu
+                value:
+                  surname: "Novák"
+                  contact: "+420 777 123 456"
+                  service: "rekonstrukce"
+                  message: "Poptávám kompletní výměnu starých hliníkových rozvodů v bytě 3+1 v Ostravě."
+                  _hp_company: ""
+                  _form_time: 1774713600
+      responses:
+        '200':
+          description: Poptávka byla úspěšně přijata a zaevidována
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+              examples:
+                success:
+                  value:
+                    success: true
+                    message: "Děkujeme za Vaši poptávku! Úspěšně jsme ji přijali a brzy se Vám ozveme."
+        '400':
+          description: Validační chyba vstupu
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+              examples:
+                missing_fields:
+                  value:
+                    success: false
+                    error: "Zadejte prosím své příjmení nebo jméno (alespoň 2 znaky)."
+                    errors:
+                      surname: "Zadejte prosím své příjmení nebo jméno (alespoň 2 znaky)."
+        '403':
+          description: Požadavek zamítnut (omezení pouze na ČR nebo zahraniční telefon)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                foreign_phone:
+                  value:
+                    success: false
+                    error: "Poptávky přijímáme pouze pro realizace v ČR (zadána zahraniční telefonní předvolba)."
+        '405':
+          description: Metoda není povolena (povolen je pouze POST)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '413':
+          description: Požadavek překročil maximální limit (32 KB)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Překročen limit požadavků (Rate Limit)
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+              description: Počet sekund do vypršení limitu
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Chyba serveru při odesílání e-mailu
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    InquiryRequest:
+      type: object
+      required:
+        - surname
+        - contact
+        - service
+        - message
+      properties:
+        surname:
+          type: string
+          minLength: 2
+          maxLength: 100
+          description: Příjmení nebo jméno žadatele (očištěno od control chars)
+          example: "Novák"
+        contact:
+          type: string
+          minLength: 9
+          maxLength: 150
+          description: E-mailová adresa nebo české telefonní číslo (9–15 číslic)
+          example: "+420 777 123 456"
+        service:
+          type: string
+          enum:
+            - elektroinstalace
+            - rekonstrukce
+            - zabezpeceni-a-automatizace
+            - na-co-myslet-pri-rekonstrukcich
+            - opravy-a-servis
+            - data-a-slaboproud
+            - jine
+          description: Zvolená oblast elektroinstalačních služeb
+          example: "rekonstrukce"
+        message:
+          type: string
+          minLength: 10
+          maxLength: 4000
+          description: Podrobný popis záměru a lokality
+          example: "Poptávám novou elektroinstalaci pro kuchyň a koupelnu."
+        _hp_company:
+          type: string
+          description: Skryté pole honeypot proti robotům (musí být prázdné)
+          default: ""
+        _form_time:
+          type: integer
+          description: Čas zahájení vyplňování formuláře (UNIX timestamp v sekundách, min. 3s před odesláním)
+
+    SuccessResponse:
+      type: object
+      required:
+        - success
+        - message
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: "Děkujeme za Vaši poptávku! Úspěšně jsme ji přijali a brzy se Vám ozveme."
+
+    ValidationErrorResponse:
+      type: object
+      required:
+        - success
+        - error
+        - errors
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+          example: "Zkontrolujte prosím zadané údaje."
+        errors:
+          type: object
+          additionalProperties:
+            type: string
+          example:
+            contact: "Zadejte platný e-mail nebo telefonní číslo (alespoň 9 číslic)."
+
+    ErrorResponse:
+      type: object
+      required:
+        - success
+        - error
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+          example: "Příliš mnoho odeslaných požadavků. Počkejte prosím několik minut a zkuste to znovu."

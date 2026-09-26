@@ -43,56 +43,12 @@ export default function Reference() {
       />
 
       <Gallery
+        eyebrow="Ukázky řemeslné práce"
+        title="Za každým vypínačem je kus práce."
         items={referenceGalleryItems}
         showLabels
-        note="Ilustrační vizuály. Fotografie a popisy skutečných realizací budou doplněny."
+        note="Fotografie znázorňují standardní postupy a řemeslné provedení elektroinstalací."
       />
-
-      <section className="section sage">
-        <div className="container">
-          <p className="eyebrow">Co pro vás můžeme připravit</p>
-          <h2>Od nového domu po drobnou opravu.</h2>
-
-          <div className="numbered-grid">
-            <article>
-              <b aria-hidden="true">01</b>
-              <div>
-                <h3>Novostavby</h3>
-                <p>
-                  Rozvody, rozvaděč, zásuvky a světla navržené podle každodenního života.
-                </p>
-              </div>
-            </article>
-            <article>
-              <b aria-hidden="true">02</b>
-              <div>
-                <h3>Rekonstrukce</h3>
-                <p>
-                  Obnova instalace a úprava rozmístění prvků podle nových potřeb.
-                </p>
-              </div>
-            </article>
-            <article>
-              <b aria-hidden="true">03</b>
-              <div>
-                <h3>Zabezpečení</h3>
-                <p>
-                  Promyšlené rozmístění čidel a pohodlné ovládání domácího zabezpečení.
-                </p>
-              </div>
-            </article>
-            <article>
-              <b aria-hidden="true">04</b>
-              <div>
-                <h3>Automatizace</h3>
-                <p>
-                  Propojené prvky a scénáře, které reagují na vybrané situace.
-                </p>
-              </div>
-            </article>
-          </div>
-        </div>
-      </section>
 
       <InquiryForm
         eyebrow="Pojďme se domluvit"

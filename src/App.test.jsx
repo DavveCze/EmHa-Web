@@ -32,7 +32,7 @@ describe('EmHa Elektro application', () => {
       { name: 'Data a slaboproud', Component: DataSlaboproud, keyword: 'Data a slaboproud' },
       { name: 'Jak pracujeme', Component: JakPracujeme, keyword: 'Takhle pracujeme' },
       { name: 'Reference', Component: Reference, keyword: 'Za každým vypínačem je kus práce.' },
-      { name: 'Kontakt', Component: Kontakt, keyword: 'Pojďme probrat' },
+      { name: 'Kontakt', Component: Kontakt, keyword: 'Kontaktní údaje' },
     ]
 
     for (const { name, Component, keyword } of pages) {
@@ -127,5 +127,45 @@ describe('EmHa Elektro application', () => {
     const html = renderToString(<App />)
     expect(html).not.toContain('gallery-zoom-badge')
     expect(html).not.toContain('🔍 Zvětšit')
+  })
+
+  it('renders balanced heading and split-tall image in NaCoMysletPriRekonstrukcich', () => {
+    const html = renderToString(
+      <NavigationProvider>
+        <NaCoMysletPriRekonstrukcich />
+      </NavigationProvider>
+    )
+    expect(html).toContain('<h2>Elektroinstalace má sloužit vám, ne vy jí.</h2>')
+    expect(html).toContain('container split split-tall')
+  })
+
+  it('renders contact trade icons and green regional map card with Google Maps link in Kontakt', () => {
+    const html = renderToString(
+      <NavigationProvider>
+        <Kontakt />
+      </NavigationProvider>
+    )
+    expect(html).toContain('contact-item')
+    expect(html).toContain('contact-icon')
+    expect(html).toContain('map-card')
+    expect(html).toContain('map-visual')
+    expect(html).toContain('OSTRAVA')
+    expect(html).toContain('https://www.google.com/maps/search/?api=1&amp;query=Ostrava')
+  })
+
+  it('renders responsive gallery bottom controls with navigation arrows and dot indicators', () => {
+    const html = renderToString(<App />)
+    expect(html).toContain('gallery-bottom-controls')
+    expect(html).toContain('gallery-dots')
+    expect(html).toContain('gallery-arrow-btn')
+  })
+
+  it('renders cookie consent banner and footer settings link', () => {
+    const html = renderToString(<App />)
+    expect(html).toContain('cookie-banner')
+    expect(html).toContain('Nastavení ochrany soukromí a cookies')
+    expect(html).toContain('Přijmout vše')
+    expect(html).toContain('Pouze nezbytné')
+    expect(html).toContain('Nastavení cookies')
   })
 })

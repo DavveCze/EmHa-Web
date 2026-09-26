@@ -10,6 +10,11 @@ export default function InquiryForm({
   const [surname, setSurname] = useState('')
   const [contact, setContact] = useState('')
   const [service, setService] = useState(defaultService)
+  const [prevDefaultService, setPrevDefaultService] = useState(defaultService)
+  if (defaultService !== prevDefaultService) {
+    setPrevDefaultService(defaultService)
+    setService(defaultService)
+  }
   const [message, setMessage] = useState('')
   const [honeypot, setHoneypot] = useState('')
   const [formStartTime] = useState(() => Math.floor(Date.now() / 1000))
@@ -135,136 +140,197 @@ export default function InquiryForm({
           )}
         </div>
 
-        <form className="inquiry-form" onSubmit={handleSubmit} noValidate={false}>
-          <p className="form-note">
-            Všechna pole jsou povinná.
-          </p>
-
-          {/* Antispam honeypot field - skryté pro roboty */}
-          <div style={{ display: 'none' }} aria-hidden="true">
-            <label htmlFor="hp_company">Nevyplňujte toto pole (ochrana proti spamu):</label>
-            <input
-              id="hp_company"
-              name="_hp_company"
-              type="text"
-              tabIndex={-1}
-              autoComplete="off"
-              value={honeypot}
-              onChange={(e) => setHoneypot(e.target.value)}
-            />
-          </div>
-
-          <div className="form-row">
-            <label htmlFor="surname">
-              Příjmení
-              <input
-                id="surname"
-                name="surname"
-                autoComplete="family-name"
-                placeholder="Vaše příjmení"
-                required
-                maxLength={100}
-                value={surname}
-                onChange={(e) => setSurname(e.target.value)}
-                disabled={isSubmitting}
-              />
-            </label>
-
-            <label htmlFor="contact">
-              <span id="contact-label">E-mail nebo telefon</span>
-              <input
-                aria-labelledby="contact-label"
-                id="contact"
-                name="contact"
-                autoComplete="email"
-                placeholder="Jak vás můžeme kontaktovat"
-                required
-                maxLength={150}
-                aria-describedby="contact-error"
-                aria-invalid={Boolean(contactError)}
-                value={contact}
-                onChange={handleContactChange}
-                disabled={isSubmitting}
-              />
-              {contactError && (
-                <span id="contact-error" className="field-error">
-                  {contactError}
-                </span>
-              )}
-            </label>
-          </div>
-
-          <label htmlFor="service">
-            S čím vám pomůžeme?
-            <select
-              id="service"
-              name="service"
-              required
-              value={service}
-              onChange={(e) => setService(e.target.value)}
-              disabled={isSubmitting}
-            >
-              <option value="">Vyberte službu</option>
-              <option value="elektroinstalace">Elektroinstalace</option>
-              <option value="rekonstrukce">Rekonstrukce</option>
-              <option value="zabezpeceni-a-automatizace">Zabezpečení a automatizace</option>
-              <option value="na-co-myslet-pri-rekonstrukcich">Konzultace před rekonstrukcí</option>
-              <option value="opravy-a-servis">Opravy a servis</option>
-              <option value="data-a-slaboproud">Data a slaboproud</option>
-              <option value="jine">Jiný požadavek</option>
-            </select>
-          </label>
-
-          <label htmlFor="message">
-            Popis poptávky a lokalita
-            <textarea
-              id="message"
-              name="message"
-              rows={4}
-              placeholder="Co plánujete a kde bude práce probíhat?"
-              required
-              minLength={10}
-              maxLength={4000}
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              disabled={isSubmitting}
-            />
-          </label>
-
-          <button
-            type="submit"
-            className="button"
-            disabled={isSubmitting}
-            aria-busy={isSubmitting}
+        {isSuccess ? (
+          <div
+            className="inquiry-success-card"
+            role="status"
+            aria-live="polite"
+            ref={statusRef}
+            tabIndex={-1}
           >
-            {isSubmitting ? (
-              <>Odesílám poptávku... <span>&bull;</span></>
-            ) : (
-              <>Odeslat nezávaznou poptávku <span>↗</span></>
-            )}
-          </button>
-
-          <p className="privacy-note">
-            Odesláním poptávky berete na vědomí zpracování zadaných údajů za účelem vyřízení dotazu a přípravy nabídky elektroinstalace (čl. 6 odst. 1 písm. b GDPR).
-          </p>
-
-          {statusMessage && (
-            <p
-              ref={statusRef}
-              className={`form-status ${isSuccess ? 'is-success' : ''} ${isError ? 'is-error' : ''}`}
-              role="status"
-              tabIndex={-1}
+            <div className="success-badge" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+            </div>
+            <h3>Poptávka byla úspěšně odeslána!</h3>
+            <p className="success-lead">
+              Děkujeme za důvěru. Vaše zadání jsme v pořádku přijali a brzy se vám ozveme.
+            </p>
+            <div className="success-next-steps">
+              <strong>Co bude následovat:</strong>
+              <ol>
+                <li>
+                  <b>Posouzení zadání:</b> Projdeme vámi popsaný rozsah prací a lokaci.
+                </li>
+                <li>
+                  <b>Spojení s vámi:</b> Do 24–48 hodin se vám ozveme na zadaný kontakt pro upřesnění detailů.
+                </li>
+                <li>
+                  <b>Nezávazná nabídka:</b> Připravíme orientační kalkulaci nebo domluvíme bezplatnou osobní prohlídku.
+                </li>
+              </ol>
+            </div>
+            <button
+              type="button"
+              className="button outline"
+              onClick={() => {
+                setIsSuccess(false)
+                setStatusMessage('')
+                setSurname('')
+                setContact('')
+                setMessage('')
+              }}
             >
-              {statusMessage}
+              Odeslat další dotaz <span>↻</span>
+            </button>
+          </div>
+        ) : (
+          <form className="inquiry-form" onSubmit={handleSubmit} noValidate={false}>
+            <p className="form-note">
+              Všechna pole jsou povinná. Stačí základní popis, technické detaily vyřešíme společně.
             </p>
-          )}
 
-          <noscript>
-            <p>
-              Pro odeslání formuláře je vyžadován JavaScript. Můžete nás kontaktovat přímo na telefonním čísle nebo e-mailu uvedeném v zápatí.
+            {/* Antispam honeypot field - skryté pro roboty */}
+            <div style={{ display: 'none' }} aria-hidden="true">
+              <label htmlFor="hp_company">Nevyplňujte toto pole (ochrana proti spamu):</label>
+              <input
+                id="hp_company"
+                name="_hp_company"
+                type="text"
+                tabIndex={-1}
+                autoComplete="off"
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+              />
+            </div>
+
+            <div className="form-row">
+              <label htmlFor="surname">
+                <span className="field-label-wrap">
+                  <span>Příjmení</span>
+                </span>
+                <input
+                  id="surname"
+                  name="surname"
+                  autoComplete="family-name"
+                  placeholder="Vaše příjmení"
+                  required
+                  maxLength={100}
+                  value={surname}
+                  onChange={(e) => setSurname(e.target.value)}
+                  disabled={isSubmitting}
+                />
+              </label>
+
+              <label htmlFor="contact">
+                <span className="field-label-wrap">
+                  <span id="contact-label">E-mail nebo telefon</span>
+                </span>
+                <input
+                  aria-labelledby="contact-label"
+                  id="contact"
+                  name="contact"
+                  autoComplete="email"
+                  placeholder="Např. +420 777 123 456 nebo e-mail"
+                  required
+                  maxLength={150}
+                  aria-describedby="contact-error"
+                  aria-invalid={Boolean(contactError)}
+                  value={contact}
+                  onChange={handleContactChange}
+                  disabled={isSubmitting}
+                />
+                {contactError && (
+                  <span id="contact-error" className="field-error">
+                    {contactError}
+                  </span>
+                )}
+              </label>
+            </div>
+
+            <label htmlFor="service">
+              <span className="field-label-wrap">
+                <span>S čím vám pomůžeme?</span>
+              </span>
+              <select
+                id="service"
+                name="service"
+                required
+                value={service}
+                onChange={(e) => setService(e.target.value)}
+                disabled={isSubmitting}
+              >
+                <option value="">Vyberte službu</option>
+                <option value="elektroinstalace">Elektroinstalace</option>
+                <option value="rekonstrukce">Rekonstrukce</option>
+                <option value="zabezpeceni-a-automatizace">Zabezpečení a automatizace</option>
+                <option value="na-co-myslet-pri-rekonstrukcich">Konzultace před rekonstrukcí</option>
+                <option value="opravy-a-servis">Opravy a servis</option>
+                <option value="data-a-slaboproud">Data a slaboproud</option>
+                <option value="jine">Jiný požadavek</option>
+              </select>
+            </label>
+
+            <label htmlFor="message">
+              <span className="field-label-wrap">
+                <span>Popis poptávky a lokalita</span>
+              </span>
+              <textarea
+                id="message"
+                name="message"
+                rows={4}
+                placeholder="Např. kompletní výměna rozvodů v bytě 3+1 v Ostravě, rekonstrukce kuchyně a koupelny, termín léto 2026..."
+                required
+                minLength={10}
+                maxLength={4000}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                disabled={isSubmitting}
+              />
+            </label>
+
+            <div className="form-trust-triggers" aria-hidden="true">
+              <span>✓ 100% nezávazně</span>
+              <span>✓ Odpovídáme do 24–48 h</span>
+              <span>✓ Konzultace na místě zdarma</span>
+            </div>
+
+            <button
+              type="submit"
+              className="button"
+              disabled={isSubmitting}
+              aria-busy={isSubmitting}
+            >
+              {isSubmitting ? (
+                <>Odesílám poptávku... <span>&bull;</span></>
+              ) : (
+                <>Odeslat nezávaznou poptávku <span>↗</span></>
+              )}
+            </button>
+
+            <p className="privacy-note">
+              Odesláním poptávky berete na vědomí zpracování zadaných údajů za účelem vyřízení dotazu a přípravy nabídky elektroinstalace (čl. 6 odst. 1 písm. b GDPR).
             </p>
-          </noscript>
-        </form>
+
+            {statusMessage && (
+              <p
+                ref={statusRef}
+                className={`form-status ${isSuccess ? 'is-success' : ''} ${isError ? 'is-error' : ''}`}
+                role="status"
+                tabIndex={-1}
+              >
+                {statusMessage}
+              </p>
+            )}
+
+            <noscript>
+              <p>
+                Pro odeslání formuláře je vyžadován JavaScript. Můžete nás kontaktovat přímo na telefonním čísle nebo e-mailu uvedeném v zápatí.
+              </p>
+            </noscript>
+          </form>
+        )}
       </div>
     </section>
   )

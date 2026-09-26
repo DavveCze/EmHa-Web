@@ -62,11 +62,7 @@ export default function NaCoMysletPriRekonstrukcich() {
           <div className="split">
             <div>
               <p className="eyebrow">Plánování podle života</p>
-              <h2>
-                Elektroinstalace má sloužit vám,
-                <br />
-                ne vy jí.
-              </h2>
+              <h2>Elektroinstalace má sloužit vám, ne vy jí.</h2>
             </div>
             <p>
               Nejčastější chybou při rekonstrukci bývá umístění zásuvek „od oka“. Když pak dorazí
@@ -125,7 +121,7 @@ export default function NaCoMysletPriRekonstrukcich() {
 
       {/* 02: Kuchyň a koupelna */}
       <section className="section sage" id="kuchyn-a-koupelna">
-        <div className="container split">
+        <div className="container split split-tall">
           <img
             src="/assets/electrician.jpg"
             alt="Příprava elektroinstalace pro spotřebiče"

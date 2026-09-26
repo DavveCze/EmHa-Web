@@ -33,7 +33,7 @@ export default function Home() {
         </div>
 
         <div className="service-heading">
-          <h3>S čím vám pomůžeme?</h3>
+          <h2>S čím vám pomůžeme?</h2>
           <p>Vyberte, co právě řešíte.</p>
         </div>
 

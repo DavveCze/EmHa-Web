@@ -4,22 +4,10 @@ import ProcessSection from '../components/ProcessSection.jsx'
 import FaqSection from '../components/FaqSection.jsx'
 import InquiryForm from '../components/InquiryForm.jsx'
 import RelatedServices from '../components/RelatedServices.jsx'
+import { ROUTE_SEO } from '../utils/seoData.js'
 
 export default function Rekonstrukce() {
-  const faqItems = [
-    {
-      q: 'Lze rekonstruovat jen část elektroinstalace?',
-      a: 'Možnosti posoudíme podle stávající instalace a zamýšlených úprav. Důležité je, aby na sebe původní a nová část bezpečně navazovaly.',
-    },
-    {
-      q: 'Dá se během rekonstrukce v bytě bydlet?',
-      a: 'Záleží na rozsahu prací. Předem spolu probereme omezení, odstávky a případné rozdělení prací do etap.',
-    },
-    {
-      q: 'Kdy řešit umístění zásuvek?',
-      a: 'Ještě před přípravou rozvodů. Pomůže plán kuchyně, nábytku a rozmístění spotřebičů.',
-    },
-  ]
+  const faqItems = ROUTE_SEO['/rekonstrukce']?.faqs || []
 
   return (
     <main id="main">
@@ -42,6 +30,7 @@ export default function Rekonstrukce() {
         description="Novou elektroinstalaci přizpůsobíme tomu, jak doma žijete. Od výměny rozvodů po zásuvky, vypínače a světla."
         imageSrc="/assets/renovation.jpg"
         imageAlt="Rekonstrukce bytů a domů — ilustrační vizuál"
+        ctaText="Poptat rekonstrukci elektro"
       />
 
       <AnchorNav />

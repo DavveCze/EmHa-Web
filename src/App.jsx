@@ -2,6 +2,7 @@ import { NavigationProvider } from './context/NavigationContext.jsx'
 import { useNavigation } from './context/navigation-core.js'
 import Header from './components/Header.jsx'
 import Footer from './components/Footer.jsx'
+import CookieConsent from './components/CookieConsent.jsx'
 import Home from './pages/Home.jsx'
 import Elektroinstalace from './pages/Elektroinstalace.jsx'
 import Rekonstrukce from './pages/Rekonstrukce.jsx'
@@ -49,6 +50,7 @@ function MainContent() {
       <Header />
       {renderPage(currentPath)}
       <Footer />
+      <CookieConsent />
     </>
   )
 }

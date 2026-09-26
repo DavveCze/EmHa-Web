@@ -53,12 +53,7 @@ class Security {
      * @return array{allowed: bool, reason: string, country: string}
      */
     public static function verifyCzechVisitor(string $ip, string $contact): array {
-        // 1. Allow localhost and internal development environments
-        if (self::isLocalOrPrivateIp($ip)) {
-            return ['allowed' => true, 'reason' => '', 'country' => 'CZ (Local/Dev)'];
-        }
-
-        // 2. Additional phone number check: reject foreign international phone numbers
+        // 1. Phone number check: reject foreign international phone numbers
         $cleanPhone = preg_replace('/[^\d+]/', '', $contact);
         if ($cleanPhone !== null && str_starts_with($cleanPhone, '+')) {
             if (!str_starts_with($cleanPhone, '+420')) {
@@ -68,6 +63,11 @@ class Security {
                     'country' => 'Foreign Phone',
                 ];
             }
+        }
+
+        // 2. Allow localhost and internal development environments
+        if (self::isLocalOrPrivateIp($ip)) {
+            return ['allowed' => true, 'reason' => '', 'country' => 'CZ (Local/Dev)'];
         }
 
         // 3. Cloudflare GeoIP Header (standard for CF-hosted sites)

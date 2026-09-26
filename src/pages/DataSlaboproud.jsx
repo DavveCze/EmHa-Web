@@ -4,22 +4,10 @@ import ProcessSection from '../components/ProcessSection.jsx'
 import FaqSection from '../components/FaqSection.jsx'
 import InquiryForm from '../components/InquiryForm.jsx'
 import RelatedServices from '../components/RelatedServices.jsx'
+import { ROUTE_SEO } from '../utils/seoData.js'
 
 export default function DataSlaboproud() {
-  const faqItems = [
-    {
-      q: 'Kdy je nejlepší se ozvat?',
-      a: 'Ideálně ještě při přípravě projektu. Umístění světel, zásuvek a datových rozvodů je lépe řešit před začátkem instalačních prací.',
-    },
-    {
-      q: 'Co potřebujete pro cenovou nabídku?',
-      a: 'Pomůže popis plánovaných prací, lokalita, přibližný termín a případně půdorys nebo fotografie. Podrobnosti probereme při úvodní konzultaci.',
-    },
-    {
-      q: 'Můžeme připravit i chytrou domácnost?',
-      a: 'Ano. Už při plánování můžeme promyslet datové rozvody a přípravu na zabezpečení nebo automatizaci. Konkrétní možnosti závisí na vybraném systému.',
-    },
-  ]
+  const faqItems = ROUTE_SEO['/data-a-slaboproud']?.faqs || []
 
   return (
     <main id="main">
@@ -42,6 +30,7 @@ export default function DataSlaboproud() {
         description="Datové zásuvky a domácí síť jako součást promyšlené instalace. Pro práci, zábavu i přípravu na další technologie."
         imageSrc="/assets/renovation.jpg"
         imageAlt="Data a slaboproud — ilustrační vizuál"
+        ctaText="Poptat realizaci sítě"
       />
 
       <AnchorNav />

@@ -1,0 +1,114 @@
+# ==============================================================================
+# FORPSI Linux Hosting Apache Configuration — EmHa Elektro
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. UTF-8 kódování a výchozí nastavení
+# ------------------------------------------------------------------------------
+AddDefaultCharset UTF-8
+Options -Indexes
+
+# ------------------------------------------------------------------------------
+# 2. Vynucení HTTPS (301 trvalé přesměrování)
+# ------------------------------------------------------------------------------
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Přesměrování na HTTPS pokud požadavek přišel přes HTTP
+  RewriteCond %{HTTPS} off
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# ------------------------------------------------------------------------------
+# 3. Bezpečnostní HTTP hlavičky (Security Headers)
+# ------------------------------------------------------------------------------
+<IfModule mod_headers.c>
+  # HSTS (HTTP Strict Transport Security) - 1 rok včetně subdomén
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+  # Ochrana před MIME type sniffing
+  Header always set X-Content-Type-Options "nosniff"
+
+  # Ochrana proti clickjackingu
+  Header always set X-Frame-Options "SAMEORIGIN"
+
+  # Referrer policy
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+  # Omezení oprávnění prohlížeče (Permissions Policy)
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+
+  # Content Security Policy (CSP) — optimalizováno pro GA4 a MS Clarity
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.clarity.ms https://*.clarity.ms; connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://stats.g.doubleclick.net https://www.clarity.ms https://*.clarity.ms https://c.bing.com; img-src 'self' data: https: https://www.google-analytics.com https://*.google-analytics.com https://www.googletagmanager.com https://www.clarity.ms https://*.clarity.ms https://c.bing.com; style-src 'self' 'unsafe-inline'; font-src 'self' data:; frame-ancestors 'none'; base-uri 'self'; form-action 'self';"
+</IfModule>
+
+# ------------------------------------------------------------------------------
+# 4. Gzip komprese (mod_deflate)
+# ------------------------------------------------------------------------------
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/plain
+  AddOutputFilterByType DEFLATE text/html
+  AddOutputFilterByType DEFLATE text/xml
+  AddOutputFilterByType DEFLATE text/css
+  AddOutputFilterByType DEFLATE text/javascript
+  AddOutputFilterByType DEFLATE application/xml
+  AddOutputFilterByType DEFLATE application/xhtml+xml
+  AddOutputFilterByType DEFLATE application/rss+xml
+  AddOutputFilterByType DEFLATE application/javascript
+  AddOutputFilterByType DEFLATE application/x-javascript
+  AddOutputFilterByType DEFLATE application/json
+  AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# ------------------------------------------------------------------------------
+# 5. Správa mezipaměti prohlížeče (Cache-Control & Expires)
+# ------------------------------------------------------------------------------
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault "access plus 1 month"
+
+  # Statické hashované assety z Vite buildu (dlouhodobá cache)
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType application/x-javascript "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType font/ttf "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
+
+  # HTML, sitemap a robots.txt bez trvalého cachování pro okamžité aktualizace
+  ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType application/xml "access plus 0 seconds"
+  ExpiresByType text/xml "access plus 0 seconds"
+</IfModule>
+
+<IfModule mod_headers.c>
+  # Hashované assety ve složce assets/
+  <FilesMatch "\.(js|css|webp|png|jpe?g|svg|ttf|woff2)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+
+  # HTML vstupní bod nesmí být tvrdě cachován, aby se projevily nové verze
+  <FilesMatch "(index\.html|sitemap\.xml|robots\.txt)$">
+    Header set Cache-Control "public, max-age=0, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+# ------------------------------------------------------------------------------
+# 6. API Routing & Single Page Application (SPA) fallback
+# ------------------------------------------------------------------------------
+<IfModule mod_rewrite.c>
+  # Směrování volání API i bez koncovky .php
+  RewriteRule ^api/contact/?$ api/contact.php [L]
+
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Všechny ostatní požadavky směruj na React aplikaci
+  RewriteRule ^ index.html [L]
+</IfModule>

@@ -80,10 +80,30 @@ export default function Gallery({
     }
   }, [isTransitioning])
 
+  const [isPaused, setIsPaused] = useState(false)
+
   const handleStep = useCallback((dir) => {
     setIsTransitioning(true)
     setActiveIndex((prev) => prev + dir)
   }, [])
+
+  // Autoplay (~4.5s) s pozastavením při interakci a respektováním prefers-reduced-motion
+  useEffect(() => {
+    if (lightboxItem || isPaused) return
+
+    if (
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
+      return
+    }
+
+    const timer = setInterval(() => {
+      handleStep(1)
+    }, 4500)
+
+    return () => clearInterval(timer)
+  }, [handleStep, lightboxItem, isPaused])
 
   const handleTransitionEnd = () => {
     if (activeIndex >= N * 2) {
@@ -176,8 +196,18 @@ export default function Gallery({
           <div
             className="gallery-carousel-wrapper"
             ref={containerRef}
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
+            onTouchStart={(e) => {
+              setIsPaused(true)
+              handleTouchStart(e)
+            }}
+            onTouchEnd={(e) => {
+              setIsPaused(false)
+              handleTouchEnd(e)
+            }}
+            onFocus={() => setIsPaused(true)}
+            onBlur={() => setIsPaused(false)}
           >
             <div
               className="gallery-track"
@@ -215,6 +245,33 @@ export default function Gallery({
                 )
               })}
             </div>
+          </div>
+
+          <div className="gallery-bottom-controls">
+            <button
+              type="button"
+              className="round gallery-arrow-btn"
+              aria-label="Předchozí fotografie"
+              onClick={() => handleStep(-1)}
+            >
+              ←
+            </button>
+            <div className="gallery-dots" aria-hidden="true">
+              {baseItems.map((_, i) => (
+                <span
+                  key={i}
+                  className={`gallery-dot ${(activeIndex % N) === i ? 'is-active' : ''}`}
+                />
+              ))}
+            </div>
+            <button
+              type="button"
+              className="round gallery-arrow-btn"
+              aria-label="Další fotografie"
+              onClick={() => handleStep(1)}
+            >
+              →
+            </button>
           </div>
 
           {note && <p className="image-note">{note}</p>}

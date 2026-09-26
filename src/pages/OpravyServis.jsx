@@ -4,22 +4,10 @@ import ProcessSection from '../components/ProcessSection.jsx'
 import FaqSection from '../components/FaqSection.jsx'
 import InquiryForm from '../components/InquiryForm.jsx'
 import RelatedServices from '../components/RelatedServices.jsx'
+import { ROUTE_SEO } from '../utils/seoData.js'
 
 export default function OpravyServis() {
-  const faqItems = [
-    {
-      q: 'Provádíte i malé opravy?',
-      a: 'Ano. Můžete se ozvat s výměnou vypínače, zásuvky, svítidla nebo s drobnou úpravou instalace.',
-    },
-    {
-      q: 'Jak rychle můžete přijet?',
-      a: 'Termín závisí na povaze závady a aktuální dostupnosti. Tato stránka nepředstavuje pohotovostní službu.',
-    },
-    {
-      q: 'Kolik bude oprava stát?',
-      a: 'Cena závisí na příčině závady, rozsahu práce a potřebném materiálu. Předem si upřesníme zadání a způsob nacenění.',
-    },
-  ]
+  const faqItems = ROUTE_SEO['/opravy-a-servis']?.faqs || []
 
   return (
     <main id="main">
@@ -42,6 +30,7 @@ export default function OpravyServis() {
         description="Nefunkční zásuvka, vypínač nebo světlo? Popište nám problém a domluvíme další postup."
         imageSrc="/assets/switch.jpg"
         imageAlt="Opravy a servis — ilustrační vizuál"
+        ctaText="Poptat opravu či servis"
       />
 
       <AnchorNav />

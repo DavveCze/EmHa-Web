@@ -4,22 +4,10 @@ import ProcessSection from '../components/ProcessSection.jsx'
 import FaqSection from '../components/FaqSection.jsx'
 import InquiryForm from '../components/InquiryForm.jsx'
 import RelatedServices from '../components/RelatedServices.jsx'
+import { ROUTE_SEO } from '../utils/seoData.js'
 
 export default function Elektroinstalace() {
-  const faqItems = [
-    {
-      q: 'Kdy je nejlepší se ozvat?',
-      a: 'Ideálně ještě při přípravě projektu. Umístění světel, zásuvek a datových rozvodů je lépe řešit před začátkem instalačních prací.',
-    },
-    {
-      q: 'Co potřebujete pro cenovou nabídku?',
-      a: 'Pomůže popis plánovaných prací, lokalita, přibližný termín a případně půdorys nebo fotografie. Podrobnosti probereme při úvodní konzultaci.',
-    },
-    {
-      q: 'Můžeme připravit i chytrou domácnost?',
-      a: 'Ano. Už při plánování můžeme promyslet datové rozvody a přípravu na zabezpečení nebo automatizaci. Konkrétní možnosti závisí na vybraném systému.',
-    },
-  ]
+  const faqItems = ROUTE_SEO['/elektroinstalace']?.faqs || []
 
   return (
     <main id="main">

@@ -10,7 +10,18 @@ export default function Footer() {
 
   const handleScrollTop = (e) => {
     e.preventDefault()
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    e.stopPropagation()
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+    if (window.location.hash) {
+      window.history.pushState(null, '', window.location.pathname)
+    }
+  }
+
+  const handleOpenCookieSettings = (e) => {
+    e.preventDefault()
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('emha:open-cookie-settings'))
+    }
   }
 
   return (
@@ -61,6 +72,22 @@ export default function Footer() {
             <a href="/na-co-myslet-pri-rekonstrukcich" onClick={(e) => handleLinkClick(e, '/na-co-myslet-pri-rekonstrukcich')}>
               Na co myslet při rekonstrukcích
             </a>
+            <button
+              type="button"
+              className="footer-cookie-btn"
+              onClick={handleOpenCookieSettings}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: 'inherit',
+                font: 'inherit',
+                cursor: 'pointer',
+                padding: 0,
+                textDecoration: 'underline',
+              }}
+            >
+              Nastavení cookies
+            </button>
           </nav>
           <span>© 2026 EmHa Elektro</span>
         </div>
