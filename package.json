@@ -10,7 +10,7 @@
     "lint": "eslint .",
     "typecheck": "node -e 'console.log(\"Typecheck: čistý JavaScript projekt bez TypeScriptu\")' --",
     "test": "vitest",
-    "test:api": "php api/tests/SecurityTest.php"
+    "test:api": "php api/tests/SecurityTest.php && php api/tests/CmsTest.php && php api/tests/MediaTest.php"
   },
   "dependencies": {
     "react": "^19.1.1",

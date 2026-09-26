@@ -1,0 +1,24 @@
+# Zabezpečení složky pro nahrávání médií (EmHa Elektro)
+# Zabraňuje spuštění jakéhokoliv PHP, CGI či jiného skriptu
+
+# 1. Vypnutí PHP engine
+<IfModule mod_php7.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+
+# 2. Blokace spouštění skriptů
+<FilesMatch "(?i)\.(php|phtml|php3|php4|php5|php7|phps|cgi|pl|sh|bash|py)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# 3. Zákaz výpisu adresáře
+Options -Indexes

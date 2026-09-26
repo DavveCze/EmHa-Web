@@ -1,8 +1,12 @@
 import { useNavigation } from '../context/navigation-core.js'
 import InquiryForm from '../components/InquiryForm.jsx'
+import { useContent } from '../context/content-core.js'
+import defaultContent from '../data/defaultContent.json'
 
 export default function Kontakt() {
   const { navigate } = useNavigation()
+  const { content } = useContent()
+  const b = content?.business || defaultContent.business
 
   return (
     <main id="main">
@@ -42,8 +46,8 @@ export default function Kontakt() {
                 </div>
                 <div className="contact-body">
                   <strong>Telefon / Mobil:</strong>{' '}
-                  <a href="tel:+420731833605">+420 731 833 605</a>
-                  <small>Konzultace a domluva termínů (Po–Pá 8:00–17:00)</small>
+                  <a href={`tel:${b.phoneRaw || '+420731833605'}`}>{b.phone || '+420 731 833 605'}</a>
+                  <small>Konzultace a domluva termínů ({b.openingHours || 'Po–Pá 8:00–17:00'})</small>
                 </div>
               </div>
 
@@ -56,7 +60,7 @@ export default function Kontakt() {
                 </div>
                 <div className="contact-body">
                   <strong>E-mail:</strong>{' '}
-                  <a href="mailto:info@emha-elektro.cz">info@emha-elektro.cz</a>
+                  <a href={`mailto:${b.email || 'info@emha-elektro.cz'}`}>{b.email || 'info@emha-elektro.cz'}</a>
                   <small>Pro zaslání projektů, půdorysů a podkladů</small>
                 </div>
               </div>
@@ -83,10 +87,10 @@ export default function Kontakt() {
                 </div>
                 <div className="contact-body">
                   <strong>Fakturační a identifikační údaje (§ 435 NOZ):</strong>
-                  <div>Martin Hořčica · EmHa Elektro</div>
-                  <div>IČO: 14216132 (neplátce DPH)</div>
-                  <div>Sídlo: Tlapákova 1242/15, Hrabůvka, 700 30 Ostrava</div>
-                  <small>Fyzická osoba zapsaná v živnostenském rejstříku od 2. 2. 2022 (Živnostenský úřad Ostrava).</small>
+                  <div>{b.legalName || 'Martin Hořčica'} · {b.name || 'EmHa Elektro'}</div>
+                  <div>IČO: {b.taxID || '14216132'} ({b.isVatPayer ? 'Plátce DPH' : 'neplátce DPH'})</div>
+                  <div>Sídlo: {b.street || 'Tlapákova 1242/15'}, {b.city || 'Hrabůvka, 700 30 Ostrava'}</div>
+                  <small>{b.registration || 'Fyzická osoba zapsaná v živnostenském rejstříku od 2. 2. 2022 (Živnostenský úřad Ostrava).'}</small>
                 </div>
               </div>
             </div>

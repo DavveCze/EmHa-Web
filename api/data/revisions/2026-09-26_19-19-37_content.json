@@ -1,0 +1,159 @@
+{
+    "business": {
+        "name": "EmHa Elektro",
+        "legalName": "Martin Hořčica",
+        "taxID": "14216132",
+        "isVatPayer": false,
+        "phone": "+420 731 833 605",
+        "phoneRaw": "+420731833605",
+        "email": "info@emha-elektro.cz",
+        "street": "Tlapákova 1242/15",
+        "city": "Ostrava – Hrabůvka",
+        "zip": "70030",
+        "region": "Moravskoslezský kraj",
+        "openingHours": "Po–Pá 8:00–17:00",
+        "registration": "Fyzická osoba zapsaná v živnostenském rejstříku od 2. 2. 2022 (Živnostenský úřad Ostrava)."
+    },
+    "seo": {
+        "/": {
+            "title": "Elektroinstalace a rekonstrukce Ostrava | EmHa Elektro",
+            "description": "Kompletní elektroinstalace rodinných domů, bytů a rekonstrukce v Ostravě a okolí. Poctivé řemeslo, bezpečné rozvody a konzultace zdarma."
+        },
+        "/elektroinstalace": {
+            "title": "Elektroinstalace v novostavbách Ostrava | EmHa Elektro",
+            "description": "Kompletní elektroinstalace novostaveb a domů v Ostravě. Návrh rozvodů, rozvaděče, zásuvky i příprava na chytrou domácnost. Poptat kalkulaci."
+        },
+        "/rekonstrukce": {
+            "title": "Rekonstrukce elektroinstalace v bytech Ostrava | EmHa Elektro",
+            "description": "Bezpečná výměna starých hliníkových rozvodů za měď v panelových i cihlových bytech v Ostravě. Nový rozvaděč, proudové chrániče a čistá práce."
+        },
+        "/zabezpeceni-a-automatizace": {
+            "title": "Zabezpečení Ajax a automatizace domů | EmHa Elektro",
+            "description": "Montáž bezdrátových alarmů Ajax a chytré automatizace pro byty i domy v Ostravě a kraji. Ochrana před vloupáním, požárem i vodou."
+        },
+        "/na-co-myslet-pri-rekonstrukcich": {
+            "title": "Na co myslet před rekonstrukcí elektroinstalace | EmHa Elektro",
+            "description": "Praktický průvodce plánováním elektroinstalace. Kdy začít, kam umístit zásuvky, jak sladit zedníky a elektrikáře a čemu se vyhnout."
+        },
+        "/opravy-a-servis": {
+            "title": "Opravy a servis elektroinstalace Ostrava | EmHa Elektro",
+            "description": "Rychlé opravy nefunkčních zásuvek, výměna jističů, rozvaděčů a pohotovostní servis elektroinstalací v Ostravě a okolí."
+        },
+        "/data-a-slaboproud": {
+            "title": "Datové rozvody a slaboproud Ostrava | EmHa Elektro",
+            "description": "Strukturovaná kabeláž Cat6, domácí počítačové sítě, stabilní Wi-Fi rozvody a televizní kabeláž v bytech a novostavbách."
+        },
+        "/jak-pracujeme": {
+            "title": "Jak pracujeme — průběh elektroinstalace | EmHa Elektro",
+            "description": "Férový postup elektroinstalace od úvodní konzultace a přehledného rozpočtu přes čistou montáž až po výchozí revizi. Zjistěte, jak probíhá zakázka."
+        },
+        "/reference": {
+            "title": "Reference a recenze elektroinstalací Ostrava | EmHa Elektro",
+            "description": "Ukázky rekonstrukcí bytů, rozvaděčů a elektroinstalací rodinných domů v Ostravě a okolí. Přečtěte si recenze, standardy poctivého řemesla a prohlédněte galerii."
+        },
+        "/kontakt": {
+            "title": "Kontakt a poptávka elektroinstalace | EmHa Elektro",
+            "description": "Poptáváte novou elektroinstalaci, rekonstrukci nebo servis v Ostravě a okolí? Zavolejte nám, napište e-mail nebo odešlete nezávazný formulář."
+        }
+    },
+    "caseStudies": [
+        {
+            "id": "poruba-byt",
+            "title": "Kompletní rekonstrukce elektroinstalace bytu 3+1",
+            "badge": "Panelový byt · Rekonstrukce",
+            "image": "/assets/renovation.jpg",
+            "imageAlt": "Nové měděné rozvody v panelovém bytě Ostrava",
+            "locality": "Ostrava – Poruba",
+            "scope": "Kompletní výměna rozvodů, nový bytový rozvaděč, datové kabely",
+            "originalState": "Původní dvoudrátové hliníkové rozvody (TN-C) z 70. let, chybějící proudové chrániče a časté přetěžování okruhů při současném chodu pračky a rychlovarné konvice.",
+            "solution": "Frézování nových instalačních tras s průmyslovým odsáváním prachu. Nové měděné kabely CYKY, samostatné 16A jištění pro kuchyňské spotřebiče (indukce, trouba, myčka, pračka). Domovní rozvaděč Hager s proudovými chrániči a přepěťovou ochranou T2. Datové rozvody Cat6 svedené do multimediálního bodu v předsíni.",
+            "duration": "4 dny hrubé rozvody + 1 den kompletace",
+            "status": "Předáno včetně výchozí revize",
+            "active": true
+        },
+        {
+            "id": "vratimov-dum",
+            "title": "Elektroinstalace novostavby rodinného domu",
+            "badge": "Rodinný dům · Novostavba",
+            "image": "/assets/new-build.jpg",
+            "imageAlt": "Elektroinstalace rodinného domu v Moravskoslezském kraji",
+            "locality": "Vratimov / Frýdek-Místek",
+            "scope": "Silnoproud, slaboproud, venkovní osvětlení, příprava pro alarm Ajax a wallbox",
+            "originalState": "Hrubá stavba před vnitřními omítkami a litými anhydritovými podlahami, požadavek na flexibilní kabeláž připravenou pro moderní technologie.",
+            "solution": "Centrální rozvaděč s 30% modulární rezervou pro budoucí technologie. Samostatný 3fázový přívod do garáže pro budoucí nabíjecí stanici elektromobilu (wallbox). Kabelová příprava pro venkovní fasádní a zahradní osvětlení na soumrakové spínače. Strukturovaná kabeláž Cat6 pro Wi-Fi přístupové body (PoE) a instalace bezdrátového zabezpečení Ajax.",
+            "duration": "Fázováno dle harmonogramu stavby (2 etapy)",
+            "status": "Předáno ke kolaudaci",
+            "active": true
+        },
+        {
+            "id": "havirov-rozvadec",
+            "title": "Výměna hlavního rozvaděče a nová kuchyňská instalace",
+            "badge": "Bytový dům · Modernizace",
+            "image": "/assets/panel-detail.jpg",
+            "imageAlt": "Nový přehledně popsaný rozvaděč s jističi a chrániči",
+            "locality": "Havířov – Město",
+            "scope": "Výměna staré pojistkové skříně za moderní rozvodnici, přívod pro indukci",
+            "originalState": "Původní keramické tavné pojistky na chodbě, nevyhovující průřezy vodičů a nemožnost připojit nově zakoupenou indukční varnou desku.",
+            "solution": "Vyřezání původního krytu a osazení moderní zapuštěné rozvodnice s jističi Eaton a kombinovaným proudovým chráničem. Dotažení nového 3fázového přívodu pro indukci v chráničce, montáž přepěťové ochrany. Všechny jističe přehledně označeny podle jednotlivých místností a spotřebičů.",
+            "duration": "1,5 pracovního dne",
+            "status": "Dokončeno bez omezení provozu domácnosti",
+            "active": true
+        },
+        {
+            "id": "centrum-cihla",
+            "title": "Rekonstrukce rozvodů v cihlovém bytě 2+kk",
+            "badge": "Cihlový dům · Šetrná instalace",
+            "image": "/assets/switch-detail.jpg",
+            "imageAlt": "Kompletace designových vypínačů a zásuvek",
+            "locality": "Ostrava – centrum",
+            "scope": "Kompletní výměna instalace, nepřímé LED osvětlení, designové vypínače",
+            "originalState": "Vysoké stropy, degradovaná textilní izolace vodičů v trubkách, pouze 1–2 zásuvky na místnost a absence ochranného vodiče.",
+            "solution": "Využití podlahových a podhledových tras pro minimalizaci zásahů do původních omítek. Zvýšení počtu zásuvek na 6–8 na místnost s ohledem na domácí pracovnu. Návrh stmívatelných LED linií v obývacím pokoji a osazení moderních rámečků Schneider v matném provedení.",
+            "duration": "3 dny rozvody + 1 den kompletace",
+            "status": "Předáno v čistém stavu",
+            "active": true
+        }
+    ],
+    "reviews": [
+        {
+            "id": "rev-1",
+            "name": "Marek K.",
+            "locality": "Ostrava – Poruba",
+            "project": "Rekonstrukce bytu 3+1",
+            "rating": 4,
+            "text": "Největší obavu jsme měli z prachu v paneláku a z toho, jak se elektrikář sladí se zedníky. Pan Hořčica dodržel přesně domluvený časový harmonogram, drážkování odsávali a v kuchyni navrhl samostatné okruhy, takže už nám nevypadávají jističe při zapnutí konvice a trouby. Skvělá a čistá práce.",
+            "badge": "Ověřená poptávka",
+            "active": true
+        },
+        {
+            "id": "rev-2",
+            "name": "Ing. Tomáš B. a Lucie B.",
+            "locality": "Frýdek-Místek",
+            "project": "Elektroinstalace rodinného domu",
+            "rating": 5,
+            "text": "Oceňujeme především praktické rady ještě před začátkem sekání. Upozornil nás na věci, na které jsme vůbec nemysleli – zásuvka na terase pro gril, datový kabel přímo k TV nebo příprava na venkovní žaluzie. Žádné vícenáklady, cena seděla přesně podle nabídky.",
+            "badge": "Novostavba RD",
+            "active": true
+        },
+        {
+            "id": "rev-3",
+            "name": "Pavel D.",
+            "locality": "Ostrava – Jih",
+            "project": "Výměna rozvaděče a nová kuchyň",
+            "rating": 5,
+            "text": "Staré hliníkové dráty a keramické pojistky byly pro novou kuchyň nebezpečné. Nový rozvaděč je precizně uspořádaný, každý jistič má jasný štítek s popisem místnosti a revizní zprávu jsme měli připravenou bez jakýchkoliv průtahů.",
+            "badge": "Rozvaděč & Kuchyň",
+            "active": true
+        },
+        {
+            "id": "rev-4",
+            "name": "Jana M.",
+            "locality": "Havířov",
+            "project": "Oprava rozvodů a zabezpečení bytu",
+            "rating": 5,
+            "text": "Kromě nových zásuvek v koupelně a kuchyni nám pan Hořčica nainstaloval a nastavil bezdrátový alarm Ajax. Všechno máme v jedné mobilní aplikaci a ovládání nám trpělivě a srozumitelně vysvětlil. Výborná komunikace i po předání zakázky.",
+            "badge": "Elektro + Ajax",
+            "active": true
+        }
+    ]
+}

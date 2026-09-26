@@ -1,5 +1,7 @@
+import { lazy, Suspense } from 'react'
 import { NavigationProvider } from './context/NavigationContext.jsx'
 import { useNavigation } from './context/navigation-core.js'
+import { ContentProvider } from './context/ContentContext.jsx'
 import Header from './components/Header.jsx'
 import Footer from './components/Footer.jsx'
 import CookieConsent from './components/CookieConsent.jsx'
@@ -13,6 +15,8 @@ import DataSlaboproud from './pages/DataSlaboproud.jsx'
 import JakPracujeme from './pages/JakPracujeme.jsx'
 import Reference from './pages/Reference.jsx'
 import Kontakt from './pages/Kontakt.jsx'
+
+const AdminPage = lazy(() => import('./pages/admin/AdminPage.jsx'))
 
 function renderPage(path) {
   switch (path) {
@@ -45,6 +49,14 @@ function renderPage(path) {
 function MainContent() {
   const { currentPath } = useNavigation()
 
+  if (currentPath === '/admin') {
+    return (
+      <Suspense fallback={<div className="admin-loading-screen"><div className="admin-spinner" /><p>Načítám administraci…</p></div>}>
+        <AdminPage />
+      </Suspense>
+    )
+  }
+
   return (
     <>
       <Header />
@@ -57,9 +69,11 @@ function MainContent() {
 
 function App() {
   return (
-    <NavigationProvider>
-      <MainContent />
-    </NavigationProvider>
+    <ContentProvider>
+      <NavigationProvider>
+        <MainContent />
+      </NavigationProvider>
+    </ContentProvider>
   )
 }
 

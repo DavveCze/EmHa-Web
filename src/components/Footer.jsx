@@ -1,7 +1,11 @@
 import { useNavigation } from '../context/navigation-core.js'
+import { useContent } from '../context/content-core.js'
+import defaultContent from '../data/defaultContent.json'
 
 export default function Footer() {
   const { navigate } = useNavigation()
+  const { content } = useContent()
+  const b = content?.business || defaultContent.business
 
   const handleLinkClick = (e, path) => {
     e.preventDefault()
@@ -59,10 +63,10 @@ export default function Footer() {
         </div>
         <div className="footer-bottom">
           <div className="footer-operator" style={{ fontSize: '0.85rem', opacity: 0.9 }}>
-            <span><strong>Martin Hořčica</strong> · EmHa Elektro</span>
-            <span> · IČO: 14216132 (neplátce DPH)</span>
-            <span> · <a href="tel:+420731833605" style={{ color: 'inherit', textDecoration: 'underline' }}>+420 731 833 605</a></span>
-            <div><small>Fyzická osoba zapsaná v živnostenském rejstříku (ŽÚ Ostrava). Sídlo: Tlapákova 1242/15, Ostrava.</small></div>
+            <span><strong>{b.legalName || 'Martin Hořčica'}</strong> · {b.name || 'EmHa Elektro'}</span>
+            <span> · IČO: {b.taxID || '14216132'} ({b.isVatPayer ? 'Plátce DPH' : 'neplátce DPH'})</span>
+            <span> · <a href={`tel:${b.phoneRaw || '+420731833605'}`} style={{ color: 'inherit', textDecoration: 'underline' }}>{b.phone || '+420 731 833 605'}</a></span>
+            <div><small>{b.registration || 'Fyzická osoba zapsaná v živnostenském rejstříku (ŽÚ Ostrava).'}{b.street ? ` Sídlo: ${b.street}, ${b.city || 'Ostrava'}.` : ''}</small></div>
           </div>
           <nav aria-label="Navigace v zápatí">
             <a href="/elektroinstalace" onClick={(e) => handleLinkClick(e, '/elektroinstalace')}>
