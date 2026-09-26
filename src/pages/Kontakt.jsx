@@ -31,13 +31,6 @@ export default function Kontakt() {
               kraji. Realizaci v konkrétní lokalitě a termín domluvíme individuálně.
             </p>
 
-            {/*
-              VYŽÁDAT OD KLIENTA před produkčním vydáním (CZ-EU-WEB-LEGAL-GATE / § 435 NOZ):
-              1. Telefonní číslo pro přímé hovory
-              2. Oficiální kontaktní e-mail
-              3. IČO podnikatele / firmy
-              4. Oficiální sídlo a příslušný živnostenský úřad zápisu
-            */}
             <div className="contact-card">
               <h3>Rychlý kontakt</h3>
 
@@ -49,7 +42,7 @@ export default function Kontakt() {
                 </div>
                 <div className="contact-body">
                   <strong>Telefon / Mobil:</strong>{' '}
-                  <a href="tel:+420000000000">+420 [Doplní klient]</a>
+                  <a href="tel:+420731833605">+420 731 833 605</a>
                   <small>Konzultace a domluva termínů (Po–Pá 8:00–17:00)</small>
                 </div>
               </div>
@@ -89,8 +82,11 @@ export default function Kontakt() {
                   </svg>
                 </div>
                 <div className="contact-body">
-                  <strong>Fakturační údaje:</strong> EmHa Elektro · IČO: [Doplní klient před spuštěním]
-                  <small>Fyzická osoba zapsaná v živnostenském rejstříku dle § 435 NOZ.</small>
+                  <strong>Fakturační a identifikační údaje (§ 435 NOZ):</strong>
+                  <div>Martin Hořčica · EmHa Elektro</div>
+                  <div>IČO: 14216132 (neplátce DPH)</div>
+                  <div>Sídlo: Tlapákova 1242/15, Hrabůvka, 700 30 Ostrava</div>
+                  <small>Fyzická osoba zapsaná v živnostenském rejstříku od 2. 2. 2022 (Živnostenský úřad Ostrava).</small>
                 </div>
               </div>
             </div>

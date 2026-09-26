@@ -121,8 +121,6 @@ export default function DataSlaboproud() {
         </div>
       </section>
 
-      <ProcessSection variant="service" />
-
       <FaqSection items={faqItems} />
 
       <InquiryForm

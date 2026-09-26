@@ -7,14 +7,18 @@ export const SITE_URL = 'https://emha-elektro.cz'
 
 export const BUSINESS_INFO = {
   name: 'EmHa Elektro',
-  legalName: 'EmHa Elektro',
+  legalName: 'Martin Hořčica',
+  taxID: '14216132',
+  identifier: '14216132',
   description:
     'Profesionální elektroinstalace pro novostavby a rekonstrukce bytů i domů v Ostravě a Moravskoslezském kraji. Zabezpečení Ajax, automatizace a slaboproud.',
-  telephone: '+420000000000',
+  telephone: '+420731833605',
   email: 'info@emha-elektro.cz',
   address: {
     '@type': 'PostalAddress',
-    addressLocality: 'Ostrava',
+    streetAddress: 'Tlapákova 1242/15',
+    addressLocality: 'Ostrava - Hrabůvka',
+    postalCode: '70030',
     addressRegion: 'Moravskoslezský kraj',
     addressCountry: 'CZ',
   },
@@ -240,9 +244,9 @@ export const ROUTE_SEO = {
   },
   '/reference': {
     page: 'reference',
-    title: 'Reference a ukázky elektroinstalací | EmHa Elektro',
+    title: 'Reference a recenze elektroinstalací Ostrava | EmHa Elektro',
     description:
-      'Ukázky standardních řemeslných postupů elektroinstalací v bytech, domech a rozvaděčích v Ostravě. Podívejte se na výsledky precizní práce.',
+      'Ukázky rekonstrukcí bytů, rozvaděčů a elektroinstalací rodinných domů v Ostravě a okolí. Přečtěte si recenze, standardy poctivého řemesla a prohlédněte galerii.',
     canonical: `${SITE_URL}/reference`,
   },
   '/kontakt': {

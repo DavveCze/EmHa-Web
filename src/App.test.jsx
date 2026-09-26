@@ -30,7 +30,7 @@ describe('EmHa Elektro application', () => {
       { name: 'Na co myslet při rekonstrukcích', Component: NaCoMysletPriRekonstrukcich, keyword: 'Na co myslet při rekonstrukcích' },
       { name: 'Opravy a servis', Component: OpravyServis, keyword: 'Opravy a servis' },
       { name: 'Data a slaboproud', Component: DataSlaboproud, keyword: 'Data a slaboproud' },
-      { name: 'Jak pracujeme', Component: JakPracujeme, keyword: 'Takhle pracujeme' },
+      { name: 'Jak pracujeme', Component: JakPracujeme, keyword: 'Takhle budeme postupovat' },
       { name: 'Reference', Component: Reference, keyword: 'Za každým vypínačem je kus práce.' },
       { name: 'Kontakt', Component: Kontakt, keyword: 'Kontaktní údaje' },
     ]
@@ -151,6 +151,11 @@ describe('EmHa Elektro application', () => {
     expect(html).toContain('map-visual')
     expect(html).toContain('OSTRAVA')
     expect(html).toContain('https://www.google.com/maps/search/?api=1&amp;query=Ostrava')
+    expect(html).toContain('+420 731 833 605')
+    expect(html).toContain('tel:+420731833605')
+    expect(html).toContain('Martin Hořčica')
+    expect(html).toContain('14216132')
+    expect(html).not.toContain('[Doplní klient]')
   })
 
   it('renders responsive gallery bottom controls with navigation arrows and dot indicators', () => {
@@ -167,5 +172,23 @@ describe('EmHa Elektro application', () => {
     expect(html).toContain('Přijmout vše')
     expect(html).toContain('Pouze nezbytné')
     expect(html).toContain('Nastavení cookies')
+  })
+
+  it('renders rich case studies, client reviews, and craft standards on Reference page', () => {
+    const html = renderToString(
+      <NavigationProvider>
+        <Reference />
+      </NavigationProvider>
+    )
+    expect(html).toContain('Případové studie typických realizací')
+    expect(html).toContain('Kompletní rekonstrukce elektroinstalace bytu 3+1')
+    expect(html).toContain('Elektroinstalace novostavby rodinného domu')
+    expect(html).toContain('Co o naší práci říkají klienti')
+    expect(html).toContain('Marek K.')
+    expect(html).toContain('Ostrava – Poruba')
+    expect(html).toContain('Ing. Tomáš B. a Lucie B.')
+    expect(html).toContain('Jak poznáte poctivou elektroinstalaci')
+    expect(html).toContain('Přísné normované instalační zóny')
+    expect(html).toContain('100% měď (CYKY)')
   })
 })

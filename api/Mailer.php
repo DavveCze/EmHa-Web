@@ -61,13 +61,101 @@ class Mailer {
         }
 
         $headerString = implode("\r\n", $headers);
-        $result = @mail($to, $encodedSubject, $htmlBody, $headerString);
+        $extraParams = '-f' . escapeshellarg($fromEmail);
+        
+        // Optional SMTP delivery if environment credentials are provided
+        if (!empty(getenv('SMTP_HOST'))) {
+            $smtpResult = $this->sendViaSmtp($to, $encodedSubject, $htmlBody, $headers);
+            if ($smtpResult) {
+                return true;
+            }
+            error_log('Mailer: SMTP failed, falling back to mail()');
+        }
+
+        $result = @mail($to, $encodedSubject, $htmlBody, $headerString, $extraParams);
 
         if (!$result) {
             error_log('Mailer: mail() call returned false for ' . $to);
         }
 
         return $result;
+    }
+
+    /**
+     * Minimal authenticated SMTP sender fallback using socket stream.
+     */
+    private function sendViaSmtp(string $to, string $subject, string $htmlBody, array $headers): bool {
+        $host = (string)getenv('SMTP_HOST');
+        $port = (int)(getenv('SMTP_PORT') ?: 587);
+        $user = (string)getenv('SMTP_USER');
+        $pass = (string)getenv('SMTP_PASS');
+        $secure = strtolower((string)(getenv('SMTP_SECURE') ?: 'tls'));
+
+        $prefix = ($secure === 'ssl') ? 'ssl://' : '';
+        $socket = @fsockopen($prefix . $host, $port, $errno, $errstr, 5);
+        if (!$socket) {
+            return false;
+        }
+
+        $read = function() use ($socket) {
+            $data = '';
+            while ($str = fgets($socket, 515)) {
+                $data .= $str;
+                if (substr($str, 3, 1) === ' ') break;
+            }
+            return $data;
+        };
+
+        $write = function(string $cmd) use ($socket) {
+            fputs($socket, $cmd . "\r\n");
+        };
+
+        $read();
+        $write('EHLO ' . gethostname());
+        $ehlo = $read();
+
+        if ($secure === 'tls' && str_contains($ehlo, 'STARTTLS')) {
+            $write('STARTTLS');
+            $read();
+            if (!stream_socket_enable_crypto($socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)) {
+                fclose($socket);
+                return false;
+            }
+            $write('EHLO ' . gethostname());
+            $read();
+        }
+
+        if (!empty($user) && !empty($pass)) {
+            $write('AUTH LOGIN');
+            $read();
+            $write(base64_encode($user));
+            $read();
+            $write(base64_encode($pass));
+            $authRes = $read();
+            if (!str_starts_with($authRes, '235')) {
+                fclose($socket);
+                return false;
+            }
+        }
+
+        $write('MAIL FROM: <' . $this->defaultFrom . '>');
+        $read();
+        $write('RCPT TO: <' . $to . '>');
+        $read();
+        $write('DATA');
+        $read();
+
+        $content = "To: " . $to . "\r\n";
+        $content .= "Subject: " . $subject . "\r\n";
+        $content .= implode("\r\n", $headers) . "\r\n\r\n";
+        $content .= $htmlBody . "\r\n.\r\n";
+
+        $write($content);
+        $dataRes = $read();
+        $write('QUIT');
+        fclose($socket);
+
+        return str_starts_with($dataRes, '250');
     }
 
     /**

@@ -58,7 +58,12 @@ export default function Footer() {
           </a>
         </div>
         <div className="footer-bottom">
-          <span>Ostrava a okolí</span>
+          <div className="footer-operator" style={{ fontSize: '0.85rem', opacity: 0.9 }}>
+            <span><strong>Martin Hořčica</strong> · EmHa Elektro</span>
+            <span> · IČO: 14216132 (neplátce DPH)</span>
+            <span> · <a href="tel:+420731833605" style={{ color: 'inherit', textDecoration: 'underline' }}>+420 731 833 605</a></span>
+            <div><small>Fyzická osoba zapsaná v živnostenském rejstříku (ŽÚ Ostrava). Sídlo: Tlapákova 1242/15, Ostrava.</small></div>
+          </div>
           <nav aria-label="Navigace v zápatí">
             <a href="/elektroinstalace" onClick={(e) => handleLinkClick(e, '/elektroinstalace')}>
               Elektroinstalace

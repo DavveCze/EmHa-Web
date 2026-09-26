@@ -9,27 +9,6 @@ export default function JakPracujeme() {
 
   return (
     <main id="main">
-      <DetailHero
-        breadcrumbs={[
-          { label: 'Domů', href: '/' },
-          { label: 'Jak pracujeme' },
-        ]}
-        eyebrow="Takhle pracujeme"
-        title={
-          <>
-            Jasná domluva.
-            <br />
-            Promyšlené řešení.
-            <br />
-            Pečlivá realizace.
-          </>
-        }
-        description="Nemusíte se vyznat v elektřině. Od toho jsme tu my. Projdeme s vámi zadání, možnosti i návaznost jednotlivých prací."
-        imageSrc="/assets/hero-v2.jpg"
-        imageAlt="Jak pracujeme — ilustrační fotografie"
-        editorial
-      />
-
       <ProcessSection variant="service" />
 
       <section className="section sage">

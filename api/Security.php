@@ -70,22 +70,31 @@ class Security {
             return ['allowed' => true, 'reason' => '', 'country' => 'CZ (Local/Dev)'];
         }
 
-        // 3. Cloudflare GeoIP Header (standard for CF-hosted sites)
-        if (!empty($_SERVER['HTTP_CF_IPCOUNTRY'])) {
-            $cfCountry = strtoupper(trim($_SERVER['HTTP_CF_IPCOUNTRY']));
-            if ($cfCountry === 'CZ') {
-                return ['allowed' => true, 'reason' => '', 'country' => 'CZ'];
-            }
-            if ($cfCountry !== 'XX' && $cfCountry !== 'T1') {
-                return [
-                    'allowed' => false,
-                    'reason' => 'Poptávkový formulář je dostupný pouze pro návštěvníky z České republiky.',
-                    'country' => $cfCountry,
-                ];
+        // 3. Check standard proxy/CDN geo headers
+        $geoHeaders = ['HTTP_CF_IPCOUNTRY', 'HTTP_X_COUNTRY_CODE', 'HTTP_GEOIP_COUNTRY_CODE'];
+        foreach ($geoHeaders as $hdr) {
+            if (!empty($_SERVER[$hdr])) {
+                $hdrCountry = strtoupper(trim($_SERVER[$hdr]));
+                if ($hdrCountry === 'CZ') {
+                    return ['allowed' => true, 'reason' => '', 'country' => 'CZ'];
+                }
+                if ($hdrCountry !== 'XX' && $hdrCountry !== 'T1' && strlen($hdrCountry) === 2) {
+                    return [
+                        'allowed' => false,
+                        'reason' => 'Poptávkový formulář je dostupný pouze pro návštěvníky z České republiky.',
+                        'country' => $hdrCountry,
+                    ];
+                }
             }
         }
 
-        // 4. Fallback lookup via IP Geolocation API with local file caching
+        // 4. Priority check: If contact is a valid CZ phone (+420 or 9 digits) or Czech email (.cz),
+        // allow immediately without wasting time on external HTTP lookups
+        if (self::isCzechContact($contact)) {
+            return ['allowed' => true, 'reason' => '', 'country' => 'CZ (Verified Contact)'];
+        }
+
+        // 5. Fallback lookup via IP Geolocation API with local file caching for ambiguous contacts
         $country = self::lookupIpCountry($ip);
         if ($country !== null) {
             if ($country === 'CZ') {
@@ -96,12 +105,6 @@ class Security {
                 'reason' => 'Poptávkový formulář je dostupný pouze pro návštěvníky z České republiky.',
                 'country' => $country,
             ];
-        }
-
-        // 5. If geo lookup was unavailable or timed out, fallback to checking contact format
-        // If contact is a valid CZ phone (+420 or 9 digits) or Czech email (.cz), allow
-        if (self::isCzechContact($contact)) {
-            return ['allowed' => true, 'reason' => '', 'country' => 'CZ (Verified Contact)'];
         }
 
         return ['allowed' => true, 'reason' => '', 'country' => 'CZ (Default)'];
@@ -147,11 +150,11 @@ class Security {
             }
         }
 
-        // Fast query to ip-api.com with 1.2s timeout
+        // Fast query to ip-api.com with 0.8s timeout
         $url = 'http://ip-api.com/json/' . urlencode($ip) . '?fields=status,countryCode';
         $ctx = stream_context_create([
             'http' => [
-                'timeout' => 1.2,
+                'timeout' => 0.8,
                 'ignore_errors' => true,
                 'user_agent' => 'EmHa-GeoChecker/1.0',
             ],
@@ -274,8 +277,8 @@ class Security {
         $formTime = (int)($input['_form_time'] ?? 0);
         if ($formTime > 0) {
             $elapsed = time() - $formTime;
-            // Less than 3 seconds or timestamp is in the future by > 60s
-            if ($elapsed < 3 || $elapsed > 86400) {
+            // Less than 3 seconds or timestamp older than 72 hours (259200s)
+            if ($elapsed < 3 || $elapsed > 259200) {
                 return ['isSpam' => true, 'reason' => 'Timing threshold violation (' . $elapsed . 's)'];
             }
         }

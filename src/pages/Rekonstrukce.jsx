@@ -124,8 +124,6 @@ export default function Rekonstrukce() {
         </div>
       </section>
 
-      <ProcessSection variant="service" />
-
       <FaqSection items={faqItems} />
 
       <InquiryForm

@@ -87,13 +87,27 @@ $honeypotSpam = [
 $res = Security::checkSpamTraps($honeypotSpam);
 assertTrue($res['isSpam'] === true, 'Detects and flags honeypot field fill as spam');
 
-// 8. Anti-bot Fast Timing trap (< 3 seconds)
+// 8. Anti-bot Timing trap
 $fastTimingSpam = [
     '_hp_company' => '',
     '_form_time' => time() - 1, // submitted after 1 second (inhuman)
 ];
 $res = Security::checkSpamTraps($fastTimingSpam);
 assertTrue($res['isSpam'] === true, 'Detects sub-3-second bot submission as spam');
+
+$extendedTiming = [
+    '_hp_company' => '',
+    '_form_time' => time() - 172800, // submitted after 48 hours (long-lived tab)
+];
+$resExt = Security::checkSpamTraps($extendedTiming);
+assertTrue($resExt['isSpam'] === false, 'Allows valid submission from long-lived tab within 72 hours');
+
+$expiredTiming = [
+    '_hp_company' => '',
+    '_form_time' => time() - 300000, // submitted after > 72 hours
+];
+$resExp = Security::checkSpamTraps($expiredTiming);
+assertTrue($resExp['isSpam'] === true, 'Rejects submissions older than 72 hours');
 
 // 9. Czech Visitor Verification: foreign phone prefix
 $foreignPhone = Security::verifyCzechVisitor('127.0.0.1', '+49 170 1234567');

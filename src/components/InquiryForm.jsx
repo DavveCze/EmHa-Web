@@ -17,7 +17,16 @@ export default function InquiryForm({
   }
   const [message, setMessage] = useState('')
   const [honeypot, setHoneypot] = useState('')
-  const [formStartTime] = useState(() => Math.floor(Date.now() / 1000))
+  const [formStartTime, setFormStartTime] = useState(() => Math.floor(Date.now() / 1000))
+
+  const handleFormInteraction = () => {
+    const now = Math.floor(Date.now() / 1000)
+    // If the tab was open for more than 1 hour, safely refresh the timestamp
+    // ensuring at least 5 seconds have passed so human verification succeeds without timing out
+    if (now - formStartTime > 3600) {
+      setFormStartTime(now - 5)
+    }
+  }
 
   const [contactError, setContactError] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -186,7 +195,12 @@ export default function InquiryForm({
             </button>
           </div>
         ) : (
-          <form className="inquiry-form" onSubmit={handleSubmit} noValidate={false}>
+          <form
+            className="inquiry-form"
+            onSubmit={handleSubmit}
+            onFocusCapture={handleFormInteraction}
+            noValidate={false}
+          >
             <p className="form-note">
               Všechna pole jsou povinná. Stačí základní popis, technické detaily vyřešíme společně.
             </p>

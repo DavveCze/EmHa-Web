@@ -127,7 +127,6 @@ export default function Elektroinstalace() {
         </div>
       </section>
 
-      <ProcessSection variant="service" />
 
       <FaqSection items={faqItems} />
 
