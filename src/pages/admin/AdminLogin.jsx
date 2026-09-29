@@ -34,22 +34,19 @@ export default function AdminLogin({ onLoginSuccess }) {
   return (
     <div className="admin-login-wrap">
       <div className="admin-login-card">
-        <div className="brand" style={{ justifyContent: 'center', marginBottom: '24px' }}>
-          <span className="brand-mark" aria-hidden="true">
-            <svg viewBox="0 0 42 34">
-              <ellipse cx="21" cy="17" rx="21" ry="17" fill="currentColor" />
-              <path
-                d="M10 9h8v16h-8m1-8h7m6-8v16m0-16h8m-8 8h8m-8 8h8"
-                fill="none"
-                stroke="#d8be4b"
-                strokeWidth="1.6"
-              />
-            </svg>
-          </span>
-          <span>
-            <strong>EmHa Elektro</strong>
-            <small>SPRÁVA WEBU (CMS)</small>
-          </span>
+        <div className="brand" style={{ justifyContent: 'center', flexDirection: 'column', alignItems: 'center', marginBottom: '24px' }}>
+          <picture>
+            <source srcSet="/assets/logo.svg" type="image/svg+xml" />
+            <source srcSet="/assets/logo.webp" type="image/webp" />
+            <img
+              src="/assets/logo.svg"
+              alt="EmHa Elektro"
+              className="brand-logo"
+              width="224"
+              height="48"
+            />
+          </picture>
+          <small style={{ display: 'block', textAlign: 'center', marginTop: '6px', fontSize: '11px', letterSpacing: '0.14em', color: 'var(--muted)' }}>SPRÁVA WEBU (CMS)</small>
         </div>
 
         <h2>Přihlášení do administrace</h2>

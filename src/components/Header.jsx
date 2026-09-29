@@ -113,21 +113,20 @@ export default function Header() {
             handleLinkClick('/')
           }}
         >
-          <span className="brand-mark" aria-hidden="true">
-            <svg viewBox="0 0 42 34">
-              <ellipse cx="21" cy="17" rx="21" ry="17" fill="currentColor" />
-              <path
-                d="M10 9h8v16h-8m1-8h7m6-8v16m0-16h8m-8 8h8m-8 8h8"
-                fill="none"
-                stroke="#d8be4b"
-                strokeWidth="1.6"
-              />
-            </svg>
-          </span>
-          <span>
-            <strong>EmHa Elektro</strong>
-            <small>ELEKTROINSTALACE</small>
-          </span>
+          <img
+            src="/assets/logo.svg"
+            alt="EmHa Elektro"
+            className="brand-logo brand-logo-dark"
+            width="224"
+            height="48"
+          />
+          <img
+            src="/assets/logo-light.svg"
+            alt="EmHa Elektro"
+            className="brand-logo brand-logo-light"
+            width="224"
+            height="48"
+          />
         </a>
 
         <button

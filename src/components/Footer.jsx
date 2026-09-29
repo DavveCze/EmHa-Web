@@ -38,21 +38,17 @@ export default function Footer() {
             aria-label="EmHa Elektro – úvodní stránka"
             onClick={(e) => handleLinkClick(e, '/')}
           >
-            <span className="brand-mark" aria-hidden="true">
-              <svg viewBox="0 0 42 34">
-                <ellipse cx="21" cy="17" rx="21" ry="17" fill="currentColor" />
-                <path
-                  d="M10 9h8v16h-8m1-8h7m6-8v16m0-16h8m-8 8h8m-8 8h8"
-                  fill="none"
-                  stroke="#d8be4b"
-                  strokeWidth="1.6"
-                />
-              </svg>
-            </span>
-            <span>
-              <strong>EmHa Elektro</strong>
-              <small>ELEKTROINSTALACE</small>
-            </span>
+            <picture>
+              <source srcSet="/assets/logo-light.svg" type="image/svg+xml" />
+              <source srcSet="/assets/logo-light.webp" type="image/webp" />
+              <img
+                src="/assets/logo-light.svg"
+                alt="EmHa Elektro"
+                className="brand-logo"
+                width="224"
+                height="48"
+              />
+            </picture>
           </a>
           <p>
             Elektroinstalace pro váš <em>domov.</em>
@@ -62,13 +58,7 @@ export default function Footer() {
           </a>
         </div>
         <div className="footer-bottom">
-          <div className="footer-operator" style={{ fontSize: '0.85rem', opacity: 0.9 }}>
-            <span><strong>{b.legalName || 'Martin Hořčica'}</strong> · {b.name || 'EmHa Elektro'}</span>
-            <span> · IČO: {b.taxID || '14216132'} ({b.isVatPayer ? 'Plátce DPH' : 'neplátce DPH'})</span>
-            <span> · <a href={`tel:${b.phoneRaw || '+420731833605'}`} style={{ color: 'inherit', textDecoration: 'underline' }}>{b.phone || '+420 731 833 605'}</a></span>
-            <div><small>{b.registration || 'Fyzická osoba zapsaná v živnostenském rejstříku (ŽÚ Ostrava).'}{b.street ? ` Sídlo: ${b.street}, ${b.city || 'Ostrava'}.` : ''}</small></div>
-          </div>
-          <nav aria-label="Navigace v zápatí">
+          <nav className="footer-nav" aria-label="Navigace v zápatí">
             <a href="/elektroinstalace" onClick={(e) => handleLinkClick(e, '/elektroinstalace')}>
               Elektroinstalace
             </a>
@@ -88,20 +78,20 @@ export default function Footer() {
               type="button"
               className="footer-cookie-btn"
               onClick={handleOpenCookieSettings}
-              style={{
-                background: 'none',
-                border: 'none',
-                color: 'inherit',
-                font: 'inherit',
-                cursor: 'pointer',
-                padding: 0,
-                textDecoration: 'underline',
-              }}
             >
               Nastavení cookies
             </button>
           </nav>
-          <span>© 2026 EmHa Elektro</span>
+
+          <div className="footer-meta-row">
+            <div className="footer-operator">
+              <span><strong>{b.legalName || 'Martin Hořčica'}</strong> · {b.name || 'EmHa Elektro'}</span>
+              <span> · IČO: {b.taxID || '14216132'} ({b.isVatPayer ? 'Plátce DPH' : 'neplátce DPH'})</span>
+              <span> · <a href={`tel:${b.phoneRaw || '+420731833605'}`}>{b.phone || '+420 731 833 605'}</a></span>
+              <div><small>{b.registration || 'Fyzická osoba zapsaná v živnostenském rejstříku (ŽÚ Ostrava).'}{b.street ? ` Sídlo: ${b.street}, ${b.city || 'Ostrava'}.` : ''}</small></div>
+            </div>
+            <span className="footer-copyright">© 2026 EmHa Elektro</span>
+          </div>
         </div>
       </div>
     </footer>

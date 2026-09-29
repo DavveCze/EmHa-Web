@@ -133,21 +133,32 @@ export default function HeroSlider() {
   return (
     <section className="hero" aria-roledescription="karusel" aria-label="Naše služby">
       {slides.map((s, idx) => (
-        <img
+        <picture
           key={s.image + idx}
           className={`hero-image ${idx === current ? 'is-active' : ''}`}
-          src={s.image}
-          alt={idx === current ? s.alt : ''}
-          aria-hidden={idx !== current}
-          loading={idx === 0 ? 'eager' : 'lazy'}
-          fetchPriority={idx === 0 ? 'high' : 'low'}
-          decoding={idx === 0 ? 'sync' : 'async'}
           style={{
             opacity: idx === current ? 1 : 0,
             transition: 'opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1)',
             pointerEvents: 'none',
           }}
-        />
+        >
+          {typeof s.image === 'string' && s.image.endsWith('.jpg') && (
+            <source srcSet={s.image.replace(/\.jpg$/, '.webp')} type="image/webp" />
+          )}
+          {typeof s.image === 'string' && s.image.endsWith('.png') && (
+            <source srcSet={s.image.replace(/\.png$/, '.webp')} type="image/webp" />
+          )}
+          <img
+            src={s.image}
+            alt={idx === current ? s.alt : ''}
+            aria-hidden={idx !== current}
+            loading={idx === 0 ? 'eager' : 'lazy'}
+            fetchPriority={idx === 0 ? 'high' : 'low'}
+            decoding={idx === 0 ? 'sync' : 'async'}
+            width="1920"
+            height="1080"
+          />
+        </picture>
       ))}
       <div className="hero-shade" />
 

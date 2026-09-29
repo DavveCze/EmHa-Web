@@ -131,13 +131,13 @@ export default function InquiryForm({
   }
 
   return (
-    <section className={`contact-section ${isHome ? 'contact-home' : ''}`} id="poptavka" style={{ paddingBottom: '3rem' }}>
+    <section className={`contact-section ${isHome ? 'contact-home' : ''}`} id="poptavka" style={{ paddingBottom: '2rem' }}>
       <div className="container contact-grid">
         <div>
           <p className="eyebrow">{eyebrow}</p>
           <h2>{title}</h2>
           {showWorkerPhoto && (
-            <div className="contact-photo">
+            <div className="contact-photo" style={{ marginBottom: '-2rem' }}>
               <picture>
                 <source srcSet="/assets/contact-worker.webp" type="image/webp" />
                 <img

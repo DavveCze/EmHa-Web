@@ -1,0 +1,89 @@
+   Výsledná zpráva k nasazení a vydání (Deployment & Release Audit) 
+
+  Status vydání: READY WITH KNOWN RISKS
+  (Web i API jsou technicky 100% zkompilované a otestované; před ostrým spuštěním na produkční doméně je nutné nastavit produkční SMTP a změnit výchozí heslo
+  administrátora).
+  ──────
+  ## 1. Souhrn provedených kontrol a ověření
+   Kontrola / Kvalitativní brána | Nástroj / Příkaz                |      Výsledek       | Poznámka
+  -------------------------------|---------------------------------|---------------------|-----------------------------------------------------------------------------------
+   Linting & Code Style          | npm run lint (eslint .)         |       PASSED        | 0 chyb, 0 varování
+   API Contract & Security       | php api/tests/SecurityTest.php  |       PASSED        | 10/10 testů (honeypot, timing, validace telefonů ČR +420, ochrana proti spamu)
+   CMS & Revision Rollback       | php api/tests/CmsTest.php       |       PASSED        | 11/11 testů (CSRF ochrana, IP lockout po 5 pokusech, atomické ukládání, rollback)
+   Media Manager Security        | php api/tests/MediaTest.php     |       PASSED        | Sanitizace názvů souborů, validace MIME typů, blokace skriptů v SVG
+   Inquiry Leads Manager         | php api/tests/InquiriesTest.php |       PASSED        | Správa stavů poptávek, interní poznámky, bezpečný export do CSV (UTF-8 BOM)
+   Frontend Unit & Component     | npm test -- --run (vitest)      |       PASSED        | 20/20 testů prošlo (layout, navigace, formuláře, accessibility)
+   Produkční duální build        | npm run build                   |       PASSED        | Vygenerován Full Web s CMS (dist/) i Clean Web (dist-clean/)
+  ──────
+  ## 2. Artefakty sestavení (Build Outputs)
+  Vytvořeny 2 nezávislé varianty připravené k nahrání na hosting (např. FORPSI / Wedos Linux Apache):
+  1. Varianta A: Plný web s CMS a administrací (dist/)
+      • HTML & Chunks: dist/index.html (3.41 kB), dist/assets/index-DBorzapl.js (110 kB gzip), dist/assets/AdminPage-B_gsU8rR.js (19.5 kB gzip), dist/assets/index-D17i6gUO.
+      css (14.8 kB gzip).
+      • PHP API: Kompletní backend v dist/api/ (poptávky, přihlašování, CSRF tokeny, správa textů a fotografií, verzování a rollback).
+      • Zabezpečení složek: api/data/.htaccess (zákaz přístupu k JSON datům), uploads/.htaccess (zákaz spouštění PHP skriptů v nahraných médiích).
+  2. Varianta B: Čistý web bez CMS (dist-clean/)
+      • Striktní Dead-Code Elimination: dist-clean/ neobsahuje žádný admin kód, administrátorské komponenty ani editor.
+      • Minimalistické API: V dist-clean/api/ je přítomen pouze contact.php + Mailer.php + Security.php pro zpracování a odeslání poptávek.
+      • Statický obsah: Veškerý obsah je zmrazen v balíčku, nulová závislost na datovém úložišti CMS.
+
+  ──────
+  ## 3. Právní a regulatorní preflight (ČR & EU Legal Gate)
+
+  1. Identifikační povinnost provozovatele (§ 435 Občanského zákoníku):
+      • V patičce i kontaktech uvedeno: Martin Hořčica · EmHa Elektro, IČO: 14216132 (neplátce DPH), Fyzická osoba zapsaná v živnostenském rejstříku (ŽÚ Ostrava od 2. 2.
+      2022).
+      • Přímé kontakty: telefon +420 731 833 605, e-mail info@emha-elektro.cz.
+  2. Ochrana osobních údajů (GDPR čl. 13 a 14):
+      • Samostatná plnohodnotná podstránka /zasady-ochrany-osobnich-udaju.
+      • Poptávkový formulář zpracovává údaje pro účely jednání o smlouvě (čl. 6 odst. 1 písm. b) GDPR). Žádný předem zaškrtnutý souhlas.
+      • Soubory inquiries.json (obsahující kontakty z poptávek) a login_attempts.json jsou chráněny v .gitignore proti nechtěnému úniku do repozitáře.
+  3. Cookies & Consent Management (Zákon č. 127/2005 Sb., § 89):
+      • Plně funkční cookie lišta s výchozím blokováním analytických cookies.
+      • Permanentní odkaz v patičce (Nastavení cookies) pro možnost kdykoliv souhlas změnit či odvolat.
+  4. Vizuální prvky a loga:
+      • Zpětná vazba od klientů upravena – odstraněn rušivý žlutý alert box, garance transparentnosti zakomponována přirozeně do úvodního textu.
+      • Logo je nasazeno ve 100% čistém vektoru SVG (včetně automatického přepínání světlé a tmavé verze pro Dark Mode) s WebP fallbackem.
+
+  ──────
+  ## 4. Známá rizika a kroky před spuštěním (Known Risks & Action Items)
+  │ Important
+  │
+  │ ### VYŽÁDAT / DOKONČIT PŘED OSTRÝM SPUŠTĚNÍM NA PRODUKCI:
+  │
+  │ 1. Změna výchozího hesla administrátora (pokud nasazujete verzi s CMS):
+  │     • Soubor api/data/config.php obsahuje výchozí hash účtu admin. Po nahrání na hosting je nutné heslo změnit buď přes administraci webu, nebo nahráním nového Argon2id
+  │     hashe.
+  │ 2. Konfigurace doručování e-mailů (SMTP):
+  │     • api/Mailer.php v základu odesílá přes lokální mail(). Pro bezpečné doručení do schránek (Seznam, Gmail) bez padání do spamu doporučujeme nastavit SPF/DKIM záznamy
+  │     na doméně emha-elektro.cz nebo doplnit SMTP údaje v hostingu.
+  │ 3. Ověření plátcovství DPH:
+  │     • Na webu je uvedeno „neplátce DPH“. Pokud se klient v mezičase stal plátcem DPH, je nutné upravit tento údaj v patičce/administraci.
+  │
+  ──────
+  ## 5. Postup nasazení na hosting (Deployment Procedure)
+
+  ### Krok 1: Výběr varianty k nahrání
+  • Pokud klient požaduje administraci obsahu (CMS): Nahrajte kompletní obsah složky dist/ do kořenového adresáře webu (www/ nebo public_html/).
+  • Pokud klient preferuje jednoduchý bezúdržbový web bez administrace: Nahrajte obsah složky dist-clean/.
+
+  ### Krok 2: Oprávnění na hostingu (Permissions)
+
+  Při nasazení varianty s CMS zajistěte práva zápisu pro webserver (obvykle 755 pro složky a 644 pro soubory):
+
+    chmod -R 755 api/data/ public/uploads/
+
+  ### Krok 3: Post-deployment Smoke Test
+
+  1. HTTPS & Headers: Ověřit přesměrování z HTTP na HTTPS a přítomnost hlaviček HSTS a CSP.
+  2. Formulář: Odeslat testovací poptávku a zkontrolovat doručení e-mailu na info@emha-elektro.cz.
+  3. Responzivita & Dark Mode: Zkontrolovat zobrazení loga a navigace na mobilním telefonu (světlý i tmavý režim).
+  4. Administrace (pokud je nasazeno dist/): Otestovat přihlášení na /admin, úpravu textu a ověřit uložení revize.
+
+  ### Krok 4: Rollback plán
+
+  V případě neočekávaného problému na hostingu:
+
+  1. Ponechat zálohu předchozího stavu adresáře www/.
+  2. Pro okamžitý rollback přepsat obsah složky www/ předchozím funkčním buildem nebo přepnout na variantu dist-clean/.
+  3. V CMS variantě lze jednotlivé úpravy textů vracet jedním kliknutím v záložce Historie verzí (Revisions).*

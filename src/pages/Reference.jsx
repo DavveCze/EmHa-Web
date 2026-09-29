@@ -99,22 +99,51 @@ export default function Reference() {
         <div className="container">
           <div className="reference-pillars" aria-label="Základní standardy realizací">
             <div className="pillar-item">
-              <span className="pillar-icon" aria-hidden="true">Cu</span>
+              <span className="pillar-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="9" />
+                  <circle cx="12" cy="7.5" r="2.2" fill="currentColor" fillOpacity="0.25" />
+                  <circle cx="8" cy="14.5" r="2.2" fill="currentColor" fillOpacity="0.25" />
+                  <circle cx="16" cy="14.5" r="2.2" fill="currentColor" fillOpacity="0.25" />
+                </svg>
+              </span>
               <strong>100% měď (CYKY)</strong>
               <span>Nové bezpečné třívodičové rozvody dle ČSN</span>
             </div>
             <div className="pillar-item">
-              <span className="pillar-icon" aria-hidden="true">⚡</span>
+              <span className="pillar-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                  <path d="M13 7.5L9.5 12h3.2L11 16.5l4.5-5.5h-3.2L13 7.5z" fill="currentColor" fillOpacity="0.25" />
+                </svg>
+              </span>
               <strong>Proudové chrániče (RCD)</strong>
               <span>Okamžitá ochrana proti úrazu elektrickým proudem</span>
             </div>
             <div className="pillar-item">
-              <span className="pillar-icon" aria-hidden="true">📋</span>
+              <span className="pillar-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                  <line x1="8" y1="12" x2="12" y2="12" />
+                  <line x1="8" y1="16" x2="10" y2="16" />
+                  <circle cx="15.5" cy="16.5" r="2.8" fill="currentColor" fillOpacity="0.2" />
+                  <polyline points="14.5 16.5 15.3 17.3 16.8 15.7" strokeWidth="1.9" />
+                </svg>
+              </span>
               <strong>Výchozí revizní zpráva</strong>
               <span>Zajištěna ve spolupráci s revizním technikem</span>
             </div>
             <div className="pillar-item">
-              <span className="pillar-icon" aria-hidden="true">🧹</span>
+              <span className="pillar-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3z" fill="currentColor" fillOpacity="0.2" />
+                  <path d="M5 3v4" />
+                  <path d="M3 5h4" />
+                  <path d="M19 17v4" />
+                  <path d="M17 19h4" />
+                </svg>
+              </span>
               <strong>Čistota při realizaci</strong>
               <span>Průmyslové odsávání prachu při drážkování</span>
             </div>
@@ -189,7 +218,7 @@ export default function Reference() {
             </div>
             <p>
               Poctivé řemeslo stavíme na spolehlivé komunikaci, dodržení rozpočtu a pořádku na pracovišti.
-              Níže uvádíme reálné reference zákazníků z našich realizací.
+              Na vyžádání vám rádi zprostředkujeme přímý kontakt na reference nebo osobní prohlídku aktuálně probíhající zakázky v Ostravě a okolí.
             </p>
           </div>
 
@@ -197,7 +226,11 @@ export default function Reference() {
             {reviews.map((rev) => (
               <blockquote key={rev.id} className="review-card">
                 <div className="review-stars" aria-label={`Hodnocení ${rev.rating} z 5 hvězdiček`}>
-                  ★★★★★
+                  {Array.from({ length: rev.rating }, (_, i) => (
+                    <svg key={i} viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor" />
+                    </svg>
+                  ))}
                 </div>
                 <p className="review-text">„{rev.text}“</p>
                 <footer className="review-author">
@@ -209,13 +242,6 @@ export default function Reference() {
                 </footer>
               </blockquote>
             ))}
-          </div>
-
-          <div className="client-note-box">
-            <span aria-hidden="true">💡</span>
-            <div>
-              <strong>Transparentní reference:</strong> Tyto ukázky zachycují autentické situace a zpětnou vazbu z našich typických zakázek v Ostravě a okolí. Máte zájem o prohlídku aktuálně probíhající realizace nebo kontakt na reference? Rádi se s vámi domluvíme.
-            </div>
           </div>
         </div>
       </section>

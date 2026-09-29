@@ -1,1 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><rect width="40" height="40" rx="20" fill="#194f40"/><path d="M22 6 10 23h10l-2 11 12-18H20z" fill="#dfbf54"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <ellipse cx="24" cy="24" rx="22" ry="17" fill="#03674d" />
+  <!-- Left mirrored E -->
+  <path d="M12 16.5 h8 v15 h-8" fill="none" stroke="#d8be4b" stroke-width="2.4" stroke-linecap="square" stroke-linejoin="miter" />
+  <!-- Right normal E -->
+  <path d="M36 16.5 h-8 v15 h8" fill="none" stroke="#d8be4b" stroke-width="2.4" stroke-linecap="square" stroke-linejoin="miter" />
+  <!-- Center connecting bar forming H -->
+  <line x1="12" y1="24" x2="36" y2="24" stroke="#d8be4b" stroke-width="2.4" stroke-linecap="square" />
+</svg>
