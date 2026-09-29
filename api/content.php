@@ -17,9 +17,10 @@ $json = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 $etag = md5($json);
 
 header('ETag: "' . $etag . '"');
-header('Cache-Control: public, max-age=60, must-revalidate');
+header('Cache-Control: public, max-age=10, must-revalidate');
 
-if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && trim($_SERVER['HTTP_IF_NONE_MATCH'], '"') === $etag) {
+$clientEtag = isset($_SERVER['HTTP_IF_NONE_MATCH']) ? preg_replace('/^W\//', '', trim($_SERVER['HTTP_IF_NONE_MATCH'], ' "')) : null;
+if (!isset($_GET['t']) && $clientEtag === $etag) {
     http_response_code(304);
     exit;
 }

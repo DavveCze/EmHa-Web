@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { NavigationContext } from './navigation-core.js'
+import { useContent } from './content-core.js'
 import { ROUTE_SEO, generateJsonLd } from '../utils/seoData.js'
 import { trackPageView } from '../config/analytics.js'
 
@@ -16,6 +17,7 @@ function normalizePath(rawPath) {
 }
 
 export function NavigationProvider({ children }) {
+  const { content } = useContent()
   const [currentPath, setCurrentPath] = useState(() => {
     if (typeof window === 'undefined') return '/'
     return normalizePath(window.location.pathname)
@@ -81,7 +83,14 @@ export function NavigationProvider({ children }) {
   }, [])
 
   useEffect(() => {
-    const meta = ROUTE_SEO[currentPath] || ROUTE_SEO['/']
+    const baseMeta = ROUTE_SEO[currentPath] || ROUTE_SEO['/']
+    const dynamicSeo = content?.seo?.[currentPath]
+    const meta = {
+      ...baseMeta,
+      title: dynamicSeo?.title || baseMeta.title,
+      description: dynamicSeo?.description || baseMeta.description,
+    }
+
     document.title = meta.title
     document.body.dataset.page = meta.page
 
@@ -112,18 +121,18 @@ export function NavigationProvider({ children }) {
       'og:site_name': 'EmHa Elektro',
       'og:locale': 'cs_CZ',
     }
-    Object.entries(ogTags).forEach(([property, content]) => {
+    Object.entries(ogTags).forEach(([property, ogContent]) => {
       let ogEl = document.querySelector(`meta[property="${property}"]`)
       if (!ogEl) {
         ogEl = document.createElement('meta')
         ogEl.setAttribute('property', property)
         document.head.appendChild(ogEl)
       }
-      ogEl.content = content
+      ogEl.content = ogContent
     })
 
-    // JSON-LD structured data
-    const jsonLd = generateJsonLd(currentPath)
+    // JSON-LD structured data with dynamic business details
+    const jsonLd = generateJsonLd(currentPath, content?.business)
     let jsonLdEl = document.getElementById('schema-jsonld')
     if (!jsonLdEl) {
       jsonLdEl = document.createElement('script')
@@ -135,7 +144,7 @@ export function NavigationProvider({ children }) {
 
     // Virtual page view tracking for SPA analytics (if consented)
     trackPageView(currentPath, meta.title)
-  }, [currentPath])
+  }, [currentPath, content])
 
   useEffect(() => {
     const handleClick = (e) => {

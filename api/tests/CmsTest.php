@@ -25,6 +25,7 @@ assertCondition(!empty($initial['business']), 'ContentManager loads valid busine
 assertCondition(!empty($initial['seo']), 'ContentManager loads valid SEO section');
 assertCondition(is_array($initial['caseStudies']), 'ContentManager loads case studies array');
 assertCondition(is_array($initial['reviews']), 'ContentManager loads reviews array');
+assertCondition(is_array($initial['pages']), 'ContentManager loads pages dictionary');
 
 // 2. Schema validation: rejects missing business section
 $invalidPayload = ['seo' => []];
@@ -40,9 +41,13 @@ assertCondition($resEmail['valid'] === false, 'Rejects invalid business email');
 // 4. Schema validation: sanitizes strings and limits review rating (1-5)
 $testPayload = $initial;
 $testPayload['reviews'][0]['rating'] = 10; // Out of bounds, should clamp to 5
+$testPayload['pages']['rekonstrukce']['sections']['soucasti']['title'] = 'Testovací nadpis sekce';
+$testPayload['pages']['rekonstrukce']['links'] = [['href' => '/test', 'label' => 'Test Link']];
 $sanitized = ContentManager::validateAndSanitize($testPayload);
 assertCondition($sanitized['valid'] === true, 'Validates well-formed payload');
 assertCondition($sanitized['data']['reviews'][0]['rating'] === 5, 'Clamps review rating to maximum 5');
+assertCondition($sanitized['data']['pages']['rekonstrukce']['sections']['soucasti']['title'] === 'Testovací nadpis sekce', 'Preserves and sanitizes custom section title');
+assertCondition($sanitized['data']['pages']['rekonstrukce']['links'][0]['label'] === 'Test Link', 'Preserves and sanitizes custom page links');
 
 // 5. Atomic save & revision snapshot creation
 $saveRes = ContentManager::save($sanitized['data']);
@@ -76,4 +81,20 @@ assertCondition($lockedLogin['success'] === false && str_contains($lockedLogin['
 Auth::logout();
 assertCondition(Auth::check() === false, 'Session destroyed after logout');
 
-echo "\nAll 10 CMS security and content tests PASSED successfully!\n\n";
+// 11. Rollback / Revision Restore
+$beforeRevisions = ContentManager::listRevisions();
+assertCondition(count($beforeRevisions) > 0, 'Revisions exist before rollback test');
+$targetFile = $beforeRevisions[0]['id'];
+
+assertCondition(ContentManager::restoreRevision('invalid_nonexistent_file.json') === false, 'Rejects nonexistent revision file');
+
+$restoreSuccess = ContentManager::restoreRevision($targetFile);
+assertCondition($restoreSuccess === true, 'restoreRevision succeeds with valid revision');
+
+$afterRevisions = ContentManager::listRevisions();
+assertCondition(count($afterRevisions) >= count($beforeRevisions), 'Revision list is updated with pre-rollback safety snapshot');
+$restoredContent = ContentManager::load();
+assertCondition(!empty($restoredContent['business']), 'Restored content is valid and loaded successfully');
+
+echo "\nAll 11 CMS security, content, and rollback tests PASSED successfully!\n\n";
+

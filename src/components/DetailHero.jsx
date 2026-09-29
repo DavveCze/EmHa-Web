@@ -1,19 +1,41 @@
 import { useNavigation } from '../context/navigation-core.js'
+import { useContent } from '../context/content-core.js'
 
 export default function DetailHero({
+  pageKey,
   breadcrumbs,
-  eyebrow,
-  title,
-  description,
-  imageSrc,
-  imageAlt,
+  eyebrow: propEyebrow,
+  title: propTitle,
+  description: propDescription,
+  imageSrc: propImageSrc,
+  imageAlt: propImageAlt,
   caption,
-  availability = 'Ostrava a okolí · Individuální cenová nabídka',
-  ctaText = 'Domluvit konzultaci zdarma',
-  ctaHref = '#poptavka',
+  availability: propAvailability = 'Ostrava a okolí · Individuální cenová nabídka',
+  ctaText: propCtaText = 'Domluvit konzultaci zdarma',
+  ctaHref: propCtaHref = '#poptavka',
   editorial = false,
 }) {
   const { navigate } = useNavigation()
+  const { content } = useContent()
+  const cmsHero = pageKey && content?.pages?.[pageKey]?.hero ? content.pages[pageKey].hero : null
+
+  const eyebrow = cmsHero?.eyebrow || propEyebrow
+  const title = cmsHero?.title ? (
+    typeof cmsHero.title === 'string' && cmsHero.title.includes('\n') ? (
+      cmsHero.title.split('\n').map((line, i, arr) => (
+        <span key={i}>
+          {line}
+          {i < arr.length - 1 && <br />}
+        </span>
+      ))
+    ) : cmsHero.title
+  ) : propTitle
+  const description = cmsHero?.description || propDescription
+  const imageSrc = cmsHero?.image || propImageSrc
+  const imageAlt = cmsHero?.imageAlt || propImageAlt
+  const availability = cmsHero?.availability || propAvailability
+  const ctaText = cmsHero?.ctaText || propCtaText
+  const ctaHref = cmsHero?.ctaHref || propCtaHref
 
   return (
     <>
@@ -40,7 +62,7 @@ export default function DetailHero({
         </div>
       )}
 
-      <section className={`detail-hero container ${editorial ? 'editorial-hero' : ''}`}>
+      <section className={`detail-hero container ${editorial ? 'editorial-hero' : ''} ${!imageSrc ? 'has-no-visual' : ''}`}>
         <div>
           {eyebrow && <p className="eyebrow">{eyebrow}</p>}
           <h1>{title}</h1>
@@ -58,10 +80,12 @@ export default function DetailHero({
           {availability && <p className="availability">{availability}</p>}
         </div>
 
-        <figure className="detail-visual">
-          <img src={imageSrc} alt={imageAlt} fetchPriority="high" />
-          {caption && <figcaption>{caption}</figcaption>}
-        </figure>
+        {imageSrc && (
+          <figure className="detail-visual">
+            <img src={imageSrc} alt={imageAlt} fetchPriority="high" />
+            {caption && <figcaption>{caption}</figcaption>}
+          </figure>
+        )}
       </section>
     </>
   )

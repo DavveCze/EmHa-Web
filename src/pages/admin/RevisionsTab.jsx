@@ -3,13 +3,17 @@ import { useState, useEffect, useCallback } from 'react'
 export default function RevisionsTab({ onRestoreSuccess, csrfToken }) {
   const [revisions, setRevisions] = useState([])
   const [isLoading, setIsLoading] = useState(false)
+  const [restoringId, setRestoringId] = useState(null)
+  const [statusMessage, setStatusMessage] = useState({ type: '', text: '' })
   const [error, setError] = useState('')
 
   const loadRevisions = useCallback(async () => {
     setIsLoading(true)
     setError('')
     try {
-      const res = await fetch('/api/admin/revisions.php')
+      const res = await fetch(`/api/admin/revisions.php?t=${Date.now()}`, {
+        cache: 'no-store',
+      })
       const json = await res.json()
       if (res.ok && json.success) {
         setRevisions(json.revisions || [])
@@ -27,7 +31,9 @@ export default function RevisionsTab({ onRestoreSuccess, csrfToken }) {
     let ignore = false
     async function fetchRevisions() {
       try {
-        const res = await fetch('/api/admin/revisions.php')
+        const res = await fetch(`/api/admin/revisions.php?t=${Date.now()}`, {
+          cache: 'no-store',
+        })
         const json = await res.json()
         if (!ignore) {
           if (res.ok && json.success) {
@@ -51,9 +57,13 @@ export default function RevisionsTab({ onRestoreSuccess, csrfToken }) {
   }, [])
 
   const handleRestore = async (revId, dateFormatted) => {
-    if (!window.confirm(`Opravdu si přejete vrátit stav webu k verzi z: ${dateFormatted}? Současný stav bude před obnovou bezpečně zazálohován.`)) {
+    if (!window.confirm(`Opravdu si přejete vrátit stav webu k verzi z: ${dateFormatted}? Současný stav bude před obnovou bezpečně zazálohován jako nový snapshot.`)) {
       return
     }
+
+    setRestoringId(revId)
+    setStatusMessage({ type: '', text: '' })
+    setError('')
 
     try {
       const res = await fetch('/api/admin/revisions.php', {
@@ -67,14 +77,26 @@ export default function RevisionsTab({ onRestoreSuccess, csrfToken }) {
 
       const json = await res.json()
       if (res.ok && json.success) {
-        alert('Verze byla úspěšně obnovena na web.')
-        onRestoreSuccess(json.data)
-        loadRevisions()
+        setStatusMessage({
+          type: 'success',
+          text: `✓ Verze ze dne ${dateFormatted} byla úspěšně obnovena na web a předchozí stav byl bezpečně zazálohován.`,
+        })
+        if (json.revisions) {
+          setRevisions(json.revisions)
+        } else {
+          loadRevisions()
+        }
+        if (onRestoreSuccess) {
+          onRestoreSuccess(json.data)
+        }
+        setTimeout(() => setStatusMessage({ type: '', text: '' }), 6000)
       } else {
-        alert(json.error || 'Obnova verze selhala.')
+        setError(json.error || 'Obnova verze selhala.')
       }
     } catch {
-      alert('Chyba při obnově verze.')
+      setError('Chyba při obnově verze (chyba sítě).')
+    } finally {
+      setRestoringId(null)
     }
   }
 
@@ -84,37 +106,83 @@ export default function RevisionsTab({ onRestoreSuccess, csrfToken }) {
         <div>
           <h3>Historie verzí a automatické zálohy (Rollback)</h3>
           <p>
-            Před každým uložením systém vytvoří bezpečnostní snapshot. Kdykoliv můžete vrátit jakoukoliv předchozí verzi webu jedním kliknutím.
+            Před každým uložením i každou obnovou verze systém vytvoří bezpečnostní snapshot. Kdykoliv můžete vrátit jakoukoliv předchozí verzi webu jedním kliknutím.
           </p>
         </div>
-        <button type="button" className="button outline" onClick={loadRevisions} disabled={isLoading}>
-          Obnovit seznam ↻
+        <button type="button" className="button outline" onClick={loadRevisions} disabled={isLoading || restoringId !== null}>
+          {isLoading ? 'Načítám… ↻' : 'Obnovit seznam ↻'}
         </button>
       </div>
 
-      {error && <div className="field-error" style={{ padding: '12px', background: '#ffebee', borderRadius: '6px' }}>{error}</div>}
+      {statusMessage.text && (
+        <div className={`admin-status-toast ${statusMessage.type}`} role="status" style={{ marginBottom: '20px' }}>
+          {statusMessage.text}
+        </div>
+      )}
+
+      {error && (
+        <div className="admin-status-toast error" role="alert" style={{ marginBottom: '20px' }}>
+          {error}
+        </div>
+      )}
 
       {revisions.length === 0 ? (
         <div className="admin-empty-state">
           <p>Zatím nebyly uloženy žádné předchozí verze (první záloha se vytvoří při vašem prvním uložení obsahu).</p>
         </div>
       ) : (
-        <div className="revisions-list">
-          {revisions.map((rev) => (
-            <div key={rev.id} className="revision-row">
+        <div className="revisions-list" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          {revisions.map((rev, idx) => (
+            <div
+              key={rev.id}
+              className="revision-row"
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: '12px',
+                padding: '14px 18px',
+                background: 'var(--bg)',
+                border: '1px solid var(--line)',
+                borderRadius: '8px',
+              }}
+            >
               <div>
-                <strong>{rev.dateFormatted}</strong>
-                <span className="revision-meta">
-                  · Snapshot: {rev.id} ({Math.round(rev.size / 1024)} kB)
-                </span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                  <strong style={{ fontSize: '1.05rem', color: 'var(--text)' }}>
+                    {rev.dateFormatted}
+                  </strong>
+                  {idx === 0 && (
+                    <span
+                      style={{
+                        background: 'var(--sage)',
+                        color: 'var(--green)',
+                        fontSize: '11px',
+                        fontWeight: 700,
+                        padding: '2px 8px',
+                        borderRadius: '4px',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.04em',
+                      }}
+                    >
+                      Nejnovější snapshot
+                    </span>
+                  )}
+                </div>
+                <div style={{ fontSize: '12px', color: 'var(--muted)', marginTop: '4px' }}>
+                  Soubor: <code>{rev.id}</code> · Velikost: {Math.round(rev.size / 1024)} kB
+                </div>
               </div>
+
               <button
                 type="button"
                 className="button outline"
-                style={{ padding: '8px 14px', fontSize: '13px' }}
+                style={{ padding: '8px 16px', fontSize: '13px' }}
                 onClick={() => handleRestore(rev.id, rev.dateFormatted)}
+                disabled={restoringId !== null}
               >
-                Vrátit tuto verzi ↺
+                {restoringId === rev.id ? 'Obnovuji… ⏳' : 'Vrátit tuto verzi ↺'}
               </button>
             </div>
           ))}

@@ -7,6 +7,8 @@ require_once __DIR__ . '/ContentManager.php';
 header('Content-Type: application/json; charset=UTF-8');
 header('X-Content-Type-Options: nosniff');
 header('X-Frame-Options: DENY');
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+header('Pragma: no-cache');
 
 if (!Auth::check()) {
     http_response_code(401);
@@ -45,8 +47,9 @@ if ($method === 'POST') {
 
     echo json_encode([
         'success' => true,
-        'message' => 'Předchozí verze byla úspěšně obnovena.',
+        'message' => 'Předchozí verze byla úspěšně obnovena na web.',
         'data' => ContentManager::load(),
+        'revisions' => ContentManager::listRevisions(),
     ]);
     exit;
 }

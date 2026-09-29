@@ -38,6 +38,7 @@ export default function ZabezpeceniAutomatizace() {
   return (
     <main id="main">
       <DetailHero
+        pageKey="zabezpeceni-a-automatizace"
         breadcrumbs={[
           { label: 'Domů', href: '/' },
           { label: 'Služby' },

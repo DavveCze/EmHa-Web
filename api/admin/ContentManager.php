@@ -44,29 +44,43 @@ class ContentManager {
             self::pruneRevisions(30);
         }
 
-        // 2. Atomic write using temporary file + flock + rename
-        $tempFile = tempnam(dirname(self::DATA_FILE), 'cmstmp_');
-        if (!$tempFile) {
-            return ['success' => false, 'error' => 'Nelze vytvořit dočasný soubor pro zápis.'];
+        // 2. Atomic write using temporary file + shared process lock + rename
+        $lockFile = self::DATA_FILE . '.lock';
+        $lockFp = fopen($lockFile, 'c');
+        if ($lockFp) {
+            flock($lockFp, LOCK_EX);
         }
 
-        $fp = fopen($tempFile, 'w');
-        if (!$fp) {
-            return ['success' => false, 'error' => 'Nelze otevřít soubor pro zápis.'];
+        try {
+            $tempFile = tempnam(dirname(self::DATA_FILE), 'cmstmp_');
+            if (!$tempFile) {
+                return ['success' => false, 'error' => 'Nelze vytvořit dočasný soubor pro zápis.'];
+            }
+
+            $fp = fopen($tempFile, 'w');
+            if (!$fp) {
+                @unlink($tempFile);
+                return ['success' => false, 'error' => 'Nelze otevřít soubor pro zápis.'];
+            }
+
+            fwrite($fp, $json);
+            fflush($fp);
+            fclose($fp);
+
+            if (!@rename($tempFile, self::DATA_FILE)) {
+                @unlink($tempFile);
+                return ['success' => false, 'error' => 'Atomické uložení selhalo.'];
+            }
+
+            @chmod(self::DATA_FILE, 0664);
+            clearstatcache();
+            return ['success' => true, 'error' => ''];
+        } finally {
+            if ($lockFp) {
+                flock($lockFp, LOCK_UN);
+                fclose($lockFp);
+            }
         }
-
-        flock($fp, LOCK_EX);
-        fwrite($fp, $json);
-        fflush($fp);
-        flock($fp, LOCK_UN);
-        fclose($fp);
-
-        if (!@rename($tempFile, self::DATA_FILE)) {
-            @unlink($tempFile);
-            return ['success' => false, 'error' => 'Atomické uložení selhalo.'];
-        }
-
-        return ['success' => true, 'error' => ''];
     }
 
     /**
@@ -74,6 +88,7 @@ class ContentManager {
      * @return array<int, array{id: string, timestamp: string, dateFormatted: string, size: int}>
      */
     public static function listRevisions(): array {
+        clearstatcache();
         if (!is_dir(self::REVISIONS_DIR)) return [];
         $files = glob(self::REVISIONS_DIR . '/*_content.json') ?: [];
         rsort($files);
@@ -98,6 +113,8 @@ class ContentManager {
 
     /**
      * Restores a snapshot by filename.
+     * Backs up the pre-rollback state before restoring,
+     * writes atomically with file lock, and clears the stat cache.
      */
     public static function restoreRevision(string $filename): bool {
         $clean = basename($filename);
@@ -106,12 +123,65 @@ class ContentManager {
             return false;
         }
 
-        $raw = file_get_contents($target);
+        $raw = @file_get_contents($target);
         if (!$raw || json_decode($raw, true) === null) {
             return false;
         }
 
-        return @copy($target, self::DATA_FILE);
+        if (!is_dir(self::REVISIONS_DIR)) {
+            @mkdir(self::REVISIONS_DIR, 0750, true);
+        }
+
+        // 1. Create a revision snapshot of current state before restoring
+        if (file_exists(self::DATA_FILE)) {
+            $timestamp = date('Y-m-d_H-i-s');
+            $backupFile = self::REVISIONS_DIR . '/' . $timestamp . '_content.json';
+            $counter = 1;
+            while (file_exists($backupFile)) {
+                $backupFile = self::REVISIONS_DIR . '/' . $timestamp . '_' . $counter . '_content.json';
+                $counter++;
+            }
+            @copy(self::DATA_FILE, $backupFile);
+            self::pruneRevisions(30);
+        }
+
+        // 2. Atomic write using temporary file + shared process lock + rename
+        $lockFile = self::DATA_FILE . '.lock';
+        $lockFp = fopen($lockFile, 'c');
+        if ($lockFp) {
+            flock($lockFp, LOCK_EX);
+        }
+
+        try {
+            $tempFile = tempnam(dirname(self::DATA_FILE), 'cmstmp_');
+            if (!$tempFile) {
+                return false;
+            }
+
+            $fp = fopen($tempFile, 'w');
+            if (!$fp) {
+                @unlink($tempFile);
+                return false;
+            }
+
+            fwrite($fp, $raw);
+            fflush($fp);
+            fclose($fp);
+
+            if (!@rename($tempFile, self::DATA_FILE)) {
+                @unlink($tempFile);
+                return false;
+            }
+
+            @chmod(self::DATA_FILE, 0664);
+            clearstatcache();
+            return true;
+        } finally {
+            if ($lockFp) {
+                flock($lockFp, LOCK_UN);
+                fclose($lockFp);
+            }
+        }
     }
 
     private static function pruneRevisions(int $maxKeep = 30): void {
@@ -220,6 +290,121 @@ class ContentManager {
                     'badge' => self::cleanString((string)($rev['badge'] ?? 'Ověřená reference'), 60),
                     'active' => (bool)($rev['active'] ?? true),
                 ];
+            }
+        }
+
+        // 5. Pages content (Hero texts, images, slides)
+        $clean['pages'] = [];
+        if (isset($input['pages']) && is_array($input['pages'])) {
+            foreach ($input['pages'] as $pageKey => $pageData) {
+                if (!is_string($pageKey) || !is_array($pageData)) continue;
+                $key = preg_replace('/[^a-z0-9_-]/', '', strtolower($pageKey));
+                $clean['pages'][$key] = [];
+
+                // Hero section
+                if (isset($pageData['hero']) && is_array($pageData['hero'])) {
+                    $h = $pageData['hero'];
+                    $clean['pages'][$key]['hero'] = [
+                        'eyebrow' => self::cleanString((string)($h['eyebrow'] ?? ''), 100),
+                        'title' => self::cleanString((string)($h['title'] ?? ''), 300),
+                        'description' => self::cleanString((string)($h['description'] ?? ''), 1500),
+                        'image' => self::cleanString((string)($h['image'] ?? ''), 300),
+                        'imageAlt' => self::cleanString((string)($h['imageAlt'] ?? ''), 200),
+                        'availability' => self::cleanString((string)($h['availability'] ?? ''), 150),
+                        'ctaText' => self::cleanString((string)($h['ctaText'] ?? ''), 80),
+                        'ctaHref' => self::cleanString((string)($h['ctaHref'] ?? '#poptavka'), 100),
+                    ];
+                }
+
+                // Slides (e.g. for Home hero slider)
+                if (isset($pageData['slides']) && is_array($pageData['slides'])) {
+                    $clean['pages'][$key]['slides'] = [];
+                    foreach ($pageData['slides'] as $slide) {
+                        if (!is_array($slide)) continue;
+                        $clean['pages'][$key]['slides'][] = [
+                            'title' => self::cleanString((string)($slide['title'] ?? ''), 200),
+                            'description' => self::cleanString((string)($slide['description'] ?? ''), 400),
+                            'image' => self::cleanString((string)($slide['image'] ?? ''), 300),
+                            'alt' => self::cleanString((string)($slide['alt'] ?? ''), 200),
+                        ];
+                    }
+                }
+
+                // Benefits (e.g. for Home)
+                if (isset($pageData['benefits']) && is_array($pageData['benefits'])) {
+                    $clean['pages'][$key]['benefits'] = [];
+                    foreach ($pageData['benefits'] as $bItem) {
+                        if (!is_array($bItem)) continue;
+                        $clean['pages'][$key]['benefits'][] = [
+                            'title' => self::cleanString((string)($bItem['title'] ?? ''), 150),
+                            'text' => self::cleanString((string)($bItem['text'] ?? ''), 300),
+                        ];
+                    }
+                }
+
+                // Services heading (e.g. for Home)
+                if (isset($pageData['servicesHeading']) && is_array($pageData['servicesHeading'])) {
+                    $sh = $pageData['servicesHeading'];
+                    $clean['pages'][$key]['servicesHeading'] = [
+                        'title' => self::cleanString((string)($sh['title'] ?? ''), 150),
+                        'subtitle' => self::cleanString((string)($sh['subtitle'] ?? ''), 200),
+                    ];
+                }
+
+                // Dynamic page sections (soucasti, detaily, etc.)
+                if (isset($pageData['sections']) && is_array($pageData['sections'])) {
+                    $clean['pages'][$key]['sections'] = [];
+                    foreach ($pageData['sections'] as $secKey => $secData) {
+                        if (!is_string($secKey) || !is_array($secData)) continue;
+                        $secK = preg_replace('/[^a-z0-9_-]/', '', strtolower($secKey));
+                        $cleanSec = [
+                            'eyebrow' => self::cleanString((string)($secData['eyebrow'] ?? ''), 120),
+                            'title' => self::cleanString((string)($secData['title'] ?? ''), 300),
+                            'description' => self::cleanString((string)($secData['description'] ?? ''), 2000),
+                            'image' => self::cleanString((string)($secData['image'] ?? ''), 300),
+                            'imageAlt' => self::cleanString((string)($secData['imageAlt'] ?? ''), 200),
+                        ];
+
+                        // Numbered items or cards (01, 02, ...)
+                        if (isset($secData['items']) && is_array($secData['items'])) {
+                            $cleanSec['items'] = [];
+                            foreach ($secData['items'] as $item) {
+                                if (!is_array($item)) continue;
+                                $cleanSec['items'][] = [
+                                    'num' => self::cleanString((string)($item['num'] ?? ''), 20),
+                                    'title' => self::cleanString((string)($item['title'] ?? ''), 150),
+                                    'text' => self::cleanString((string)($item['text'] ?? ''), 1000),
+                                ];
+                            }
+                        }
+
+                        // Checklist items (bullet points)
+                        if (isset($secData['checklist']) && is_array($secData['checklist'])) {
+                            $cleanSec['checklist'] = [];
+                            foreach ($secData['checklist'] as $checkItem) {
+                                if (!is_string($checkItem) && !is_numeric($checkItem)) continue;
+                                $cleanCheck = self::cleanString((string)$checkItem, 300);
+                                if ($cleanCheck !== '') {
+                                    $cleanSec['checklist'][] = $cleanCheck;
+                                }
+                            }
+                        }
+
+                        $clean['pages'][$key]['sections'][$secK] = $cleanSec;
+                    }
+                }
+
+                // Page links / Related services
+                if (isset($pageData['links']) && is_array($pageData['links'])) {
+                    $clean['pages'][$key]['links'] = [];
+                    foreach ($pageData['links'] as $link) {
+                        if (!is_array($link)) continue;
+                        $clean['pages'][$key]['links'][] = [
+                            'href' => self::cleanString((string)($link['href'] ?? ''), 150),
+                            'label' => self::cleanString((string)($link['label'] ?? ''), 100),
+                        ];
+                    }
+                }
             }
         }
 

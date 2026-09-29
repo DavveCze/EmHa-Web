@@ -15,6 +15,7 @@ import DataSlaboproud from './pages/DataSlaboproud.jsx'
 import JakPracujeme from './pages/JakPracujeme.jsx'
 import Reference from './pages/Reference.jsx'
 import Kontakt from './pages/Kontakt.jsx'
+import ZasadyOchranyUdaju from './pages/ZasadyOchranyUdaju.jsx'
 
 const AdminPage = lazy(() => import('./pages/admin/AdminPage.jsx'))
 
@@ -40,6 +41,9 @@ function renderPage(path) {
       return <Reference />
     case '/kontakt':
       return <Kontakt />
+    case '/zasady-ochrany-osobnich-udaju':
+    case '/ochrana-osobnich-udaju':
+      return <ZasadyOchranyUdaju />
     case '/':
     default:
       return <Home />

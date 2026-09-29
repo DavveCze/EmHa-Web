@@ -28,11 +28,11 @@ export default function Kontakt() {
       <section className="section" style={{ paddingTop: '12px' }}>
         <div className="container split">
           <div>
-            <p className="eyebrow">Spojte se s námi</p>
-            <h1>Kontaktní údaje a nezávazná poptávka</h1>
+            <p className="eyebrow">{content?.pages?.kontakt?.hero?.eyebrow || 'Spojte se s námi'}</p>
+            <h1>{content?.pages?.kontakt?.hero?.title || 'Kontaktní údaje a nezávazná poptávka'}</h1>
             <p>
-              Pro byty, rodinné domy i menší opravy. Působíme v Ostravě a celém Moravskoslezském
-              kraji. Realizaci v konkrétní lokalitě a termín domluvíme individuálně.
+              {content?.pages?.kontakt?.hero?.description ||
+                'Pro byty, rodinné domy i menší opravy. Působíme v Ostravě a celém Moravskoslezském kraji. Realizaci v konkrétní lokalitě a termín domluvíme individuálně.'}
             </p>
 
             <div className="contact-card">

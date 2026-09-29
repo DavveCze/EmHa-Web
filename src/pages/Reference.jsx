@@ -72,6 +72,7 @@ export default function Reference() {
   return (
     <main id="main">
       <DetailHero
+        pageKey="reference"
         breadcrumbs={[
           { label: 'Domů', href: '/' },
           { label: 'Reference' },

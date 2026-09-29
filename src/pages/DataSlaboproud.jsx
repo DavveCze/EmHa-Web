@@ -12,6 +12,7 @@ export default function DataSlaboproud() {
   return (
     <main id="main">
       <DetailHero
+        pageKey="data-a-slaboproud"
         breadcrumbs={[
           { label: 'Domů', href: '/' },
           { label: 'Služby' },

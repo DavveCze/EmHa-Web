@@ -1,4 +1,6 @@
 import { useNavigation } from '../context/navigation-core.js'
+import { useContent } from '../context/content-core.js'
+import defaultContent from '../data/defaultContent.json'
 import HeroSlider from '../components/HeroSlider.jsx'
 import ProcessSection from '../components/ProcessSection.jsx'
 import Gallery from '../components/Gallery.jsx'
@@ -6,6 +8,19 @@ import InquiryForm from '../components/InquiryForm.jsx'
 
 export default function Home() {
   const { navigate } = useNavigation()
+  const { content } = useContent()
+  const homeData = content?.pages?.home || defaultContent?.pages?.home || {}
+  const benefits = homeData.benefits || [
+    { title: 'Od návrhu po dokončení', text: 'Vše potřebné pro vaši elektroinstalaci.' },
+    { title: 'Konzultace zdarma', text: 'Nejdřív si společně projdeme váš záměr.' },
+    { title: 'Ostrava a okolí', text: 'Pro byty, rodinné domy i menší opravy.' },
+  ]
+  const servicesHeading = homeData.servicesHeading || {
+    title: 'S čím vám pomůžeme?',
+    subtitle: 'Vyberte, co právě řešíte.',
+  }
+  const feature = homeData.sections?.feature
+  const reviews = (content?.reviews || defaultContent.reviews).filter((r) => r.active !== false).slice(0, 2)
 
   const handleLink = (e, path) => {
     e.preventDefault()
@@ -18,23 +33,17 @@ export default function Home() {
 
       <section className="intro container" aria-label="Naše výhody">
         <div className="benefits">
-          <div>
-            <h3>Od návrhu po dokončení</h3>
-            <p>Vše potřebné pro vaši elektroinstalaci.</p>
-          </div>
-          <div>
-            <h3>Konzultace zdarma</h3>
-            <p>Nejdřív si společně projdeme váš záměr.</p>
-          </div>
-          <div>
-            <h3>Ostrava a okolí</h3>
-            <p>Pro byty, rodinné domy i menší opravy.</p>
-          </div>
+          {benefits.map((b, idx) => (
+            <div key={idx}>
+              <h3>{b.title}</h3>
+              <p>{b.text}</p>
+            </div>
+          ))}
         </div>
 
         <div className="service-heading">
-          <h2>S čím vám pomůžeme?</h2>
-          <p>Vyberte, co právě řešíte.</p>
+          <h2>{servicesHeading.title}</h2>
+          <p>{servicesHeading.subtitle}</p>
         </div>
 
         <div className="service-tiles">
@@ -89,19 +98,45 @@ export default function Home() {
         <div className="container">
           <div className="section-heading">
             <div>
-              <p className="eyebrow">Elektroinstalace od základu</p>
+              <p className="eyebrow">{feature?.eyebrow || 'Elektroinstalace od základu'}</p>
               <h2>
-                Od rozvodů
-                <br />
-                po poslední zásuvku.
+                {feature?.title ? (
+                  typeof feature.title === 'string' && feature.title.includes('\n') ? (
+                    feature.title.split('\n').map((line, i, arr) => (
+                      <span key={i}>
+                        {line}
+                        {i < arr.length - 1 && <br />}
+                      </span>
+                    ))
+                  ) : feature.title
+                ) : (
+                  <>
+                    Od rozvodů
+                    <br />
+                    po poslední zásuvku.
+                  </>
+                )}
               </h2>
             </div>
             <p>
-              Kam přijde lampa? A kde bude stůl?
-              <br />
-              Projdeme s vámi i běžné detaily,
-              <br />
-              aby zásuvky byly tam, kde je potřebujete.
+              {feature?.description ? (
+                typeof feature.description === 'string' && feature.description.includes('\n') ? (
+                  feature.description.split('\n').map((line, i, arr) => (
+                    <span key={i}>
+                      {line}
+                      {i < arr.length - 1 && <br />}
+                    </span>
+                  ))
+                ) : feature.description
+              ) : (
+                <>
+                  Kam přijde lampa? A kde bude stůl?
+                  <br />
+                  Projdeme s vámi i běžné detaily,
+                  <br />
+                  aby zásuvky byly tam, kde je potřebujete.
+                </>
+              )}
             </p>
           </div>
 
@@ -155,10 +190,12 @@ export default function Home() {
 
           <div className="small-services">
             <h3>
-              A také drobnosti,
-              <br />
-              na kterých záleží.
+              A také drobnosti, na kterých záleží.    
             </h3>
+            <p className="fine-note" style={{ marginTop: '-1rem', marginBottom: '1.5rem' }}>
+                ✓ &nbsp;Revize a projektovou dokumentaci zajistíme ve spolupráci s revizním technikem a
+                projektantem.
+            </p>
             <div>
               <a
                 href="/opravy-a-servis"
@@ -190,17 +227,58 @@ export default function Home() {
               </a>
             </div>
           </div>
-
-          <p className="fine-note">
-            ✓ &nbsp;Revize a projektovou dokumentaci zajistíme ve spolupráci s revizním technikem a
-            projektantem.
-          </p>
         </div>
       </section>
 
       <ProcessSection variant="home" />
 
       <Gallery />
+
+      {reviews.length > 0 && (
+        <section className="section" id="recenze">
+          <div className="container">
+            <div className="section-heading">
+              <div>
+                <p className="eyebrow">Zkušenosti zákazníků</p>
+                <h2>Co o naší práci říkají klienti</h2>
+              </div>
+              <p>
+                Poctivé řemeslo, dodržené termíny a spolehlivá domluva.
+                <br />
+                Níže uvádíme reálná hodnocení z našich realizací v Ostravě a okolí.
+              </p>
+            </div>
+
+            <div className="reviews-grid">
+              {reviews.map((rev) => (
+                <blockquote key={rev.id} className="review-card">
+                  <div className="review-stars" aria-label={`Hodnocení ${rev.rating} z 5 hvězdiček`}>
+                    ★★★★★
+                  </div>
+                  <p className="review-text">„{rev.text}“</p>
+                  <footer className="review-author">
+                    <div className="review-author-info">
+                      <strong>{rev.name}</strong>
+                      <small>{rev.locality} · {rev.project}</small>
+                    </div>
+                    <span className="review-badge">{rev.badge}</span>
+                  </footer>
+                </blockquote>
+              ))}
+            </div>
+
+            <div style={{ textAlign: 'center', marginTop: '32px' }}>
+              <a
+                href="/reference"
+                className="button outline"
+                onClick={(e) => handleLink(e, '/reference')}
+              >
+                Zobrazit všechny reference a ukázky práce <span>↗</span>
+              </a>
+            </div>
+          </div>
+        </section>
+      )}
 
       <InquiryForm
         eyebrow="Pojďme se domluvit"

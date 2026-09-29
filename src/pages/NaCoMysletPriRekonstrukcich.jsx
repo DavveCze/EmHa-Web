@@ -34,6 +34,7 @@ export default function NaCoMysletPriRekonstrukcich() {
   return (
     <main id="main">
       <DetailHero
+        pageKey="na-co-myslet-pri-rekonstrukcich"
         breadcrumbs={[
           { label: 'Domů', href: '/' },
           { label: 'Rekonstrukce', href: '/rekonstrukce' },

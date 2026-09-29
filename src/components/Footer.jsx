@@ -81,6 +81,9 @@ export default function Footer() {
             <a href="/na-co-myslet-pri-rekonstrukcich" onClick={(e) => handleLinkClick(e, '/na-co-myslet-pri-rekonstrukcich')}>
               Na co myslet při rekonstrukcích
             </a>
+            <a href="/zasady-ochrany-osobnich-udaju" onClick={(e) => handleLinkClick(e, '/zasady-ochrany-osobnich-udaju')}>
+              Ochrana osobních údajů
+            </a>
             <button
               type="button"
               className="footer-cookie-btn"

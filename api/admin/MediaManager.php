@@ -92,6 +92,11 @@ class MediaManager {
             return ['success' => false, 'error' => 'Nepodařilo se uložit soubor na disk.', 'item' => null];
         }
 
+        // SVG security check against Stored XSS
+        if ($mime === 'image/svg+xml' && !self::sanitizeSvg($destination)) {
+            return ['success' => false, 'error' => 'SVG soubor obsahuje nepovolené skripty nebo aktivní obsah.', 'item' => null];
+        }
+
         // Get image dimensions if raster image
         $dimensions = [0, 0];
         if ($mime !== 'image/svg+xml') {
@@ -205,5 +210,25 @@ class MediaManager {
         $string = trim($string, '-');
         $string = preg_replace('~-+~', '-', $string) ?? '';
         return strtolower($string);
+    }
+
+    /**
+     * Inspects SVG content and removes/rejects embedded scripts, event handlers, and data/javascript URIs.
+     */
+    public static function sanitizeSvg(string $filePath): bool {
+        $content = @file_get_contents($filePath);
+        if ($content === false || empty($content)) return false;
+
+        // Disallow dangerous script patterns, inline events, and foreignObject
+        if (preg_match('/<script[\s>]/i', $content) ||
+            preg_match('/\bon[a-z]+\s*=/i', $content) ||
+            preg_match('/href\s*=\s*["\']\s*javascript:/i', $content) ||
+            preg_match('/xlink:href\s*=\s*["\']\s*javascript:/i', $content) ||
+            preg_match('/<foreignObject[\s>]/i', $content)) {
+            @unlink($filePath);
+            return false;
+        }
+
+        return true;
     }
 }

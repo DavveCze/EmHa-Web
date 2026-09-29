@@ -11,6 +11,7 @@ import DataSlaboproud from './pages/DataSlaboproud.jsx'
 import JakPracujeme from './pages/JakPracujeme.jsx'
 import Reference from './pages/Reference.jsx'
 import Kontakt from './pages/Kontakt.jsx'
+import ZasadyOchranyUdaju from './pages/ZasadyOchranyUdaju.jsx'
 import { NavigationProvider } from './context/NavigationContext.jsx'
 
 describe('EmHa Elektro application', () => {
@@ -190,5 +191,31 @@ describe('EmHa Elektro application', () => {
     expect(html).toContain('Jak poznáte poctivou elektroinstalaci')
     expect(html).toContain('Přísné normované instalační zóny')
     expect(html).toContain('100% měď (CYKY)')
+  })
+
+  it('renders ZasadyOchranyUdaju page with GDPR Article 13 disclosures and high-contrast styling', () => {
+    const html = renderToString(
+      <NavigationProvider>
+        <ZasadyOchranyUdaju />
+      </NavigationProvider>
+    )
+    expect(html).toContain('Zásady zpracování')
+    expect(html).toContain('Martin Hořčica')
+    expect(html).toContain('14216132')
+    expect(html).toContain('Úřad pro ochranu osobních údajů')
+    expect(html).toContain('has-no-visual')
+    expect(html).not.toContain('color:#fff')
+    expect(html).not.toContain('color:#dfbf55')
+  })
+
+  it('renders verified customer reviews teaser on homepage', () => {
+    const html = renderToString(
+      <NavigationProvider>
+        <Home />
+      </NavigationProvider>
+    )
+    expect(html).toContain('Co o naší práci říkají klienti')
+    expect(html).toContain('reviews-grid')
+    expect(html).toContain('Marek K.')
   })
 })

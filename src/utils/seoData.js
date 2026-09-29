@@ -256,6 +256,13 @@ export const ROUTE_SEO = {
       'Poptáváte novou elektroinstalaci, rekonstrukci nebo servis v Ostravě a okolí? Zavolejte nám, napište e-mail nebo odešlete nezávazný formulář.',
     canonical: `${SITE_URL}/kontakt`,
   },
+  '/zasady-ochrany-osobnich-udaju': {
+    page: 'zasady-ochrany-osobnich-udaju',
+    title: 'Zásady zpracování osobních údajů (GDPR) | EmHa Elektro',
+    description:
+      'Informace o zpracování a ochraně osobních údajů zákazníků dle GDPR. Účely, právní základ a práva subjektů údajů u EmHa Elektro Martin Hořčica.',
+    canonical: `${SITE_URL}/zasady-ochrany-osobnich-udaju`,
+  },
 }
 
 // Aliases
@@ -265,21 +272,27 @@ ROUTE_SEO['/automatizace'] = ROUTE_SEO['/zabezpeceni-a-automatizace']
 /**
  * Generates the full JSON-LD @graph for a given route
  */
-export function generateJsonLd(path) {
+export function generateJsonLd(path, businessOverride = null) {
   const normalized = path === '' || path === '/index' ? '/' : path.split('?')[0].split('#')[0]
   const config = ROUTE_SEO[normalized] || ROUTE_SEO['/']
 
+  const b = businessOverride || {}
   const businessNode = {
     '@context': 'https://schema.org',
     '@type': 'Electrician',
     '@id': `${SITE_URL}/#business`,
-    name: BUSINESS_INFO.name,
-    legalName: BUSINESS_INFO.legalName,
+    name: b.name || BUSINESS_INFO.name,
+    legalName: b.legalName || BUSINESS_INFO.legalName,
     description: BUSINESS_INFO.description,
     url: SITE_URL,
-    telephone: BUSINESS_INFO.telephone,
-    email: BUSINESS_INFO.email,
-    address: BUSINESS_INFO.address,
+    telephone: b.phoneRaw || b.phone || BUSINESS_INFO.telephone,
+    email: b.email || BUSINESS_INFO.email,
+    address: {
+      ...BUSINESS_INFO.address,
+      streetAddress: b.street || BUSINESS_INFO.address.streetAddress,
+      addressLocality: b.city || BUSINESS_INFO.address.addressLocality,
+      postalCode: b.zip || BUSINESS_INFO.address.postalCode,
+    },
     geo: BUSINESS_INFO.geo,
     areaServed: BUSINESS_INFO.areaServed,
     openingHoursSpecification: BUSINESS_INFO.openingHoursSpecification,

@@ -324,7 +324,15 @@ export default function InquiryForm({
             </button>
 
             <p className="privacy-note">
-              Odesláním poptávky berete na vědomí zpracování zadaných údajů za účelem vyřízení dotazu a přípravy nabídky elektroinstalace (čl. 6 odst. 1 písm. b GDPR).
+              Odesláním poptávky berete na vědomí zpracování zadaných údajů za účelem vyřízení dotazu a přípravy nabídky elektroinstalace (čl. 6 odst. 1 písm. b GDPR). Více v{' '}
+              <a
+                href="/zasady-ochrany-osobnich-udaju"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: 'inherit', textDecoration: 'underline' }}
+              >
+                Zásadách ochrany osobních údajů
+              </a>.
             </p>
 
             {statusMessage && (

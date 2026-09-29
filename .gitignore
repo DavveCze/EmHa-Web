@@ -113,3 +113,9 @@ scratch/
 *.tmp
 *.temp
 emha-elektro/
+api/data/*.lock
+api/data/sessions/
+api/data/revisions/*
+!api/data/revisions/.gitkeep
+public/uploads/*
+!public/uploads/.gitkeep

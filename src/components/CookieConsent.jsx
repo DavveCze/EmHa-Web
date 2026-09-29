@@ -103,7 +103,15 @@ export default function CookieConsent() {
               <p>
                 Tento web používá nezbytné technické cookies pro správné fungování stránek a poptávkových formulářů.
                 S vaším svolením využíváme také anonymní analytické cookies (Google Analytics a Microsoft Clarity)
-                pro vyhodnocování návštěvnosti a zkvalitňování našich řemeslných služeb.
+                pro vyhodnocování návštěvnosti a zkvalitňování našich řemeslných služeb. Více v{' '}
+                <a
+                  href="/zasady-ochrany-osobnich-udaju"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: 'inherit', textDecoration: 'underline' }}
+                >
+                  Zásadách ochrany osobních údajů
+                </a>.
               </p>
             </div>
             <div className="cookie-banner-actions">

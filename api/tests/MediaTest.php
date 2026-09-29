@@ -78,8 +78,15 @@ assertCondition($delRes['success'] === true, 'Removes item from media index');
 $emptyList = MediaManager::listMedia();
 assertCondition(count($emptyList) === 0, 'Item successfully deleted from index');
 
-// Restore original metadata
-file_put_contents($metaFile, $origContent, LOCK_EX);
-@unlink($tmpFile);
+// Test SVG sanitization
+$safeSvg = tempnam(sys_get_temp_dir(), 'safe_svg_');
+file_put_contents($safeSvg, '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40"/></svg>');
+assertCondition(MediaManager::sanitizeSvg($safeSvg) === true, 'Allows clean well-formed SVG without scripts');
+@unlink($safeSvg);
+
+$xssSvg = tempnam(sys_get_temp_dir(), 'xss_svg_');
+file_put_contents($xssSvg, '<svg xmlns="http://www.w3.org/2000/svg" onload="alert(1)"><script>alert("xss")</script></svg>');
+assertCondition(MediaManager::sanitizeSvg($xssSvg) === false, 'Rejects SVG containing script or onload event handler');
+assertCondition(!file_exists($xssSvg), 'Automatically unlinks rejected malicious SVG file');
 
 echo "\nAll MediaManager tests PASSED successfully!\n\n";

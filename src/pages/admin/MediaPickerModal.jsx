@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function MediaPickerModal({ isOpen, onClose, onSelect, csrfToken }) {
   const [mediaList, setMediaList] = useState([])
@@ -6,7 +6,7 @@ export default function MediaPickerModal({ isOpen, onClose, onSelect, csrfToken 
   const [isUploading, setIsUploading] = useState(false)
   const [error, setError] = useState('')
 
-  const loadMedia = async () => {
+  const fetchMedia = async () => {
     setIsLoading(true)
     setError('')
     try {
@@ -24,9 +24,31 @@ export default function MediaPickerModal({ isOpen, onClose, onSelect, csrfToken 
     }
   }
 
-  // Load when opening
+  // Load automatically when opening modal
+  useEffect(() => {
+    if (!isOpen) return
+    let ignore = false
+
+    async function loadInitial() {
+      try {
+        const res = await fetch('/api/admin/media.php')
+        const json = await res.json()
+        if (!ignore && res.ok && json.success) {
+          setMediaList(json.media || [])
+        }
+      } catch {
+        // silent fallback, user can click Obnovit
+      }
+    }
+
+    loadInitial()
+    return () => {
+      ignore = true
+    }
+  }, [isOpen])
+
   const handleOpen = () => {
-    loadMedia()
+    fetchMedia()
   }
 
   const handleUpload = async (e) => {
@@ -51,7 +73,7 @@ export default function MediaPickerModal({ isOpen, onClose, onSelect, csrfToken 
 
       const json = await res.json()
       if (res.ok && json.success) {
-        await loadMedia()
+        await fetchMedia()
         if (json.item) {
           onSelect(json.item.url, json.item.alt)
           onClose()

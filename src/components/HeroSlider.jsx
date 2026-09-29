@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigation } from '../context/navigation-core.js'
+import { useContent } from '../context/content-core.js'
 
 const SLIDES = [
   {
@@ -88,11 +89,41 @@ const SLIDES = [
 export default function HeroSlider() {
   const [current, setCurrent] = useState(0)
   const { navigate } = useNavigation()
+  const { content } = useContent()
 
-  const slide = SLIDES[current]
+  const cmsSlides = content?.pages?.home?.slides
+  const slides = (cmsSlides && cmsSlides.length > 0)
+    ? cmsSlides.map((cs, idx) => ({
+        ...SLIDES[idx],
+        title: cs.title ? (
+          typeof cs.title === 'string' && cs.title.includes('\n') ? (
+            cs.title.split('\n').map((l, i, arr) => (
+              <span key={i}>
+                {l}
+                {i < arr.length - 1 && <br />}
+              </span>
+            ))
+          ) : cs.title
+        ) : SLIDES[idx]?.title,
+        description: cs.description ? (
+          typeof cs.description === 'string' && cs.description.includes('\n') ? (
+            cs.description.split('\n').map((l, i, arr) => (
+              <span key={i}>
+                {l}
+                {i < arr.length - 1 && <br />}
+              </span>
+            ))
+          ) : cs.description
+        ) : SLIDES[idx]?.description,
+        image: cs.image || SLIDES[idx]?.image,
+        alt: cs.alt || SLIDES[idx]?.alt,
+      }))
+    : SLIDES
+
+  const slide = slides[current] || slides[0]
 
   const handleStep = (step) => {
-    setCurrent((prev) => (prev + step + SLIDES.length) % SLIDES.length)
+    setCurrent((prev) => (prev + step + slides.length) % slides.length)
   }
 
   const handleGoTo = (index) => {
@@ -101,9 +132,9 @@ export default function HeroSlider() {
 
   return (
     <section className="hero" aria-roledescription="karusel" aria-label="Naše služby">
-      {SLIDES.map((s, idx) => (
+      {slides.map((s, idx) => (
         <img
-          key={s.image}
+          key={s.image + idx}
           className={`hero-image ${idx === current ? 'is-active' : ''}`}
           src={s.image}
           alt={idx === current ? s.alt : ''}
@@ -139,10 +170,10 @@ export default function HeroSlider() {
       <div className="hero-bottom">
         <div className="hero-controls">
           <span className="slide-count" aria-live="polite">
-            <strong>0{current + 1}</strong> / 0{SLIDES.length}
+            <strong>0{current + 1}</strong> / 0{slides.length}
           </span>
           <div className="slide-tabs">
-            {SLIDES.map((_, i) => (
+            {slides.map((_, i) => (
               <button
                 key={i}
                 type="button"

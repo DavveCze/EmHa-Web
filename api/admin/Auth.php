@@ -42,6 +42,17 @@ class Auth {
         // Sliding expiration (extend by 2 hours)
         $data['expires'] = time() + 7200;
         @file_put_contents($sessionFile, json_encode($data));
+
+        if (!headers_sent()) {
+            setcookie(self::COOKIE_NAME, $token, [
+                'expires' => time() + 7200,
+                'path' => '/',
+                'domain' => '',
+                'secure' => self::isHttps(),
+                'httponly' => true,
+                'samesite' => 'Strict',
+            ]);
+        }
         return true;
     }
 
@@ -136,9 +147,7 @@ class Auth {
         );
 
         // 4. Set HttpOnly SameSite=Strict Secure cookie
-        $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
-            || (!empty($_SERVER['SERVER_PORT']) && (int)$_SERVER['SERVER_PORT'] === 443)
-            || (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
+        $isHttps = self::isHttps();
 
         if (!headers_sent()) {
             setcookie(self::COOKIE_NAME, $sessionToken, [
@@ -177,10 +186,19 @@ class Auth {
             setcookie(self::COOKIE_NAME, '', [
                 'expires' => time() - 3600,
                 'path' => '/',
+                'domain' => '',
+                'secure' => self::isHttps(),
+                'httponly' => true,
                 'samesite' => 'Strict',
             ]);
         }
         unset($_COOKIE[self::COOKIE_NAME]);
+    }
+
+    public static function isHttps(): bool {
+        return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+            || (!empty($_SERVER['SERVER_PORT']) && (int)$_SERVER['SERVER_PORT'] === 443)
+            || (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
     }
 
     private static function isIpLocked(string $ip): bool {

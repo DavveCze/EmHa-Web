@@ -12,6 +12,7 @@ export default function OpravyServis() {
   return (
     <main id="main">
       <DetailHero
+        pageKey="opravy-a-servis"
         breadcrumbs={[
           { label: 'Domů', href: '/' },
           { label: 'Služby' },

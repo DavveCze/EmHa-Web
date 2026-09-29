@@ -1,18 +1,42 @@
 import { useState, useEffect } from 'react'
+import { useContent } from '../../context/content-core.js'
 import BusinessTab from './BusinessTab.jsx'
 import SeoTab from './SeoTab.jsx'
 import CaseStudiesTab from './CaseStudiesTab.jsx'
 import ReviewsTab from './ReviewsTab.jsx'
 import MediaTab from './MediaTab.jsx'
 import RevisionsTab from './RevisionsTab.jsx'
+import InquiriesTab from './InquiriesTab.jsx'
+import PagesTab from './PagesTab.jsx'
 
 export default function AdminDashboard({ onLogout, csrfToken }) {
-  const [activeTab, setActiveTab] = useState('business')
+  const { refreshContent } = useContent()
+  const [activeTab, setActiveTab] = useState('inquiries')
   const [data, setData] = useState(null)
   const [originalData, setOriginalData] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
   const [statusMessage, setStatusMessage] = useState({ type: '', text: '' })
+  const [newInquiriesCount, setNewInquiriesCount] = useState(0)
+
+  useEffect(() => {
+    let ignore = false
+    async function fetchInquiryCount() {
+      try {
+        const res = await fetch('/api/admin/inquiries.php')
+        const json = await res.json()
+        if (!ignore && res.ok && json.success) {
+          setNewInquiriesCount(json.newCount || 0)
+        }
+      } catch {
+        // silent fallback
+      }
+    }
+    fetchInquiryCount()
+    return () => {
+      ignore = true
+    }
+  }, [])
 
   useEffect(() => {
     let ignore = false
@@ -62,6 +86,9 @@ export default function AdminDashboard({ onLogout, csrfToken }) {
       if (res.ok && json.success) {
         setOriginalData(JSON.parse(JSON.stringify(json.data)))
         setData(json.data)
+        if (refreshContent) {
+          refreshContent(json.data)
+        }
         setStatusMessage({ type: 'success', text: 'Změny byly úspěšně a bezpečně publikovány na web.' })
         setTimeout(() => setStatusMessage({ type: '', text: '' }), 5000)
       } else {
@@ -84,7 +111,11 @@ export default function AdminDashboard({ onLogout, csrfToken }) {
   const handleRestoreSuccess = (newData) => {
     setData(newData)
     setOriginalData(JSON.parse(JSON.stringify(newData)))
-    setStatusMessage({ type: 'success', text: 'Verze byla úspěšně obnovena na web.' })
+    if (refreshContent) {
+      refreshContent(newData)
+    }
+    setStatusMessage({ type: 'success', text: 'Předchozí verze byla úspěšně obnovena na web.' })
+    setTimeout(() => setStatusMessage({ type: '', text: '' }), 6000)
   }
 
   if (isLoading || !data) {
@@ -160,6 +191,21 @@ export default function AdminDashboard({ onLogout, csrfToken }) {
       <nav className="admin-tabs" aria-label="Záložky správy">
         <button
           type="button"
+          className={`admin-tab-btn ${activeTab === 'inquiries' ? 'is-active' : ''}`}
+          onClick={() => setActiveTab('inquiries')}
+          style={newInquiriesCount > 0 ? { borderColor: '#dfbf55', color: '#dfbf55', fontWeight: 'bold' } : {}}
+        >
+          📥 Poptávky {newInquiriesCount > 0 ? `(${newInquiriesCount} nových)` : ''}
+        </button>
+        <button
+          type="button"
+          className={`admin-tab-btn ${activeTab === 'pages' ? 'is-active' : ''}`}
+          onClick={() => setActiveTab('pages')}
+        >
+          📄 Editor stránek & fotek
+        </button>
+        <button
+          type="button"
           className={`admin-tab-btn ${activeTab === 'business' ? 'is-active' : ''}`}
           onClick={() => setActiveTab('business')}
         >
@@ -204,6 +250,19 @@ export default function AdminDashboard({ onLogout, csrfToken }) {
 
       {/* Main Tab Panes */}
       <main className="admin-content-main">
+        {activeTab === 'inquiries' && (
+          <InquiriesTab
+            csrfToken={csrfToken}
+            onCountChange={setNewInquiriesCount}
+          />
+        )}
+        {activeTab === 'pages' && (
+          <PagesTab
+            data={data.pages || {}}
+            onChange={(p) => setData({ ...data, pages: p })}
+            csrfToken={csrfToken}
+          />
+        )}
         {activeTab === 'business' && (
           <BusinessTab
             data={data.business || {}}
