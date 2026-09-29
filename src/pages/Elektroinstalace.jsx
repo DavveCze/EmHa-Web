@@ -36,7 +36,7 @@ export default function Elektroinstalace() {
   ]
 
   return (
-    <main id="main">
+    <main id="main" tabIndex={-1}>
       <DetailHero
         pageKey="elektroinstalace"
         breadcrumbs={[

@@ -59,7 +59,7 @@ export default function SeoTab({ data, onChange }) {
         </div>
 
         <div className="route-selector">
-          <label htmlFor="route-select">
+          <label htmlFor="route-select" className="route-selector-label">
             <strong>Vyberte stránku:</strong>
             <select
               id="route-select"

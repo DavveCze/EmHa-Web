@@ -202,7 +202,7 @@ export default function CaseStudiesTab({ data, onChange, csrfToken }) {
                       className="admin-case-img-preview"
                     />
                     <div className="admin-case-img-controls">
-                      <div style={{ display: 'flex', gap: '8px' }}>
+                      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                         <input
                           type="text"
                           value={item.image || ''}

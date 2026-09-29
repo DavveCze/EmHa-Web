@@ -184,9 +184,6 @@ export default function PagesTab({ data, onChange, csrfToken }) {
       <div
         className="admin-page-selector-bar"
         style={{
-          display: 'flex',
-          gap: '8px',
-          flexWrap: 'wrap',
           marginBottom: '24px',
           background: 'var(--bg)',
           padding: '12px 16px',
@@ -194,21 +191,45 @@ export default function PagesTab({ data, onChange, csrfToken }) {
           border: '1px solid var(--line)',
         }}
       >
-        {PAGE_DEFINITIONS.map((p) => (
-          <button
-            key={p.id}
-            type="button"
-            className={`admin-filter-chip ${selectedPageId === p.id ? 'is-active' : ''}`}
-            onClick={() => {
-              setSelectedPageId(p.id)
-              setActiveSectionTab(p.isSlider ? 'slides' : 'hero')
+        <label className="admin-mobile-page-select-label" htmlFor="admin-page-select-mobile">
+          <span>Vyberte stránku k editaci:</span>
+          <select
+            id="admin-page-select-mobile"
+            className="admin-mobile-page-select"
+            value={selectedPageId}
+            onChange={(e) => {
+              const newId = e.target.value
+              const p = PAGE_DEFINITIONS.find((item) => item.id === newId)
+              setSelectedPageId(newId)
+              setActiveSectionTab(p?.isSlider ? 'slides' : 'hero')
               setActiveSlideIdx(0)
             }}
-            style={{ fontSize: '13px', padding: '6px 12px' }}
           >
-            {p.label}
-          </button>
-        ))}
+            {PAGE_DEFINITIONS.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.label}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <div className="admin-desktop-page-chips">
+          {PAGE_DEFINITIONS.map((p) => (
+            <button
+              key={p.id}
+              type="button"
+              className={`admin-filter-chip ${selectedPageId === p.id ? 'is-active' : ''}`}
+              onClick={() => {
+                setSelectedPageId(p.id)
+                setActiveSectionTab(p.isSlider ? 'slides' : 'hero')
+                setActiveSlideIdx(0)
+              }}
+              style={{ fontSize: '13px', padding: '6px 12px' }}
+            >
+              {p.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Editor Body */}
@@ -354,7 +375,7 @@ export default function PagesTab({ data, onChange, csrfToken }) {
           {activeSectionTab === 'benefits' && (
             <div className="admin-case-card">
               <h4 style={{ margin: '0 0 16px 0', color: 'var(--green)', fontSize: '16px' }}>3 Hlavní výhody v úvodu webu</h4>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 250px), 1fr))', gap: '20px' }}>
                 {[0, 1, 2].map((idx) => {
                   const b = (currentPageData.benefits || [])[idx] || {}
                   return (
@@ -500,7 +521,7 @@ export default function PagesTab({ data, onChange, csrfToken }) {
                 const hasImage = currentPageConfig.hasImage !== false
 
                 return (
-                  <div style={{ display: 'grid', gridTemplateColumns: hasImage ? 'repeat(auto-fit, minmax(320px, 1fr))' : '1fr', gap: '28px' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: hasImage ? 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))' : '1fr', gap: '28px' }}>
                     <div className="admin-form-grid" style={{ gridColumn: hasImage ? 'auto' : '1 / -1' }}>
                       <div className="admin-field full-width">
                         <label htmlFor="hero-eyebrow">
@@ -711,7 +732,7 @@ export default function PagesTab({ data, onChange, csrfToken }) {
                       Číslované kroky (01–04):
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 250px), 1fr))', gap: '16px' }}>
                       {items.map((item, idx) => (
                         <div
                           key={idx}
@@ -989,6 +1010,7 @@ export default function PagesTab({ data, onChange, csrfToken }) {
       {/* Media Picker Modal */}
       {isPickerOpen && (
         <MediaPickerModal
+          isOpen={isPickerOpen}
           csrfToken={csrfToken}
           onSelect={handleMediaSelect}
           onClose={() => {

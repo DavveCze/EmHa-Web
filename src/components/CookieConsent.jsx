@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { initAnalytics } from '../config/analytics.js'
 
 const CONSENT_STORAGE_KEY = 'emha_cookie_consent_v1'
@@ -27,6 +27,8 @@ export default function CookieConsent() {
   const [consent, setConsent] = useState(getInitialConsent)
   const [showModal, setShowModal] = useState(false)
   const [analyticsAllowed, setAnalyticsAllowed] = useState(() => consent.analytics)
+  const modalRef = useRef(null)
+  const lastActiveElementRef = useRef(null)
 
   useEffect(() => {
     if (consent.analytics) {
@@ -42,6 +44,47 @@ export default function CookieConsent() {
       window.removeEventListener('emha:open-cookie-settings', handleOpenSettings)
     }
   }, [consent.analytics])
+
+  useEffect(() => {
+    if (showModal) {
+      lastActiveElementRef.current = document.activeElement
+      const timer = setTimeout(() => {
+        const firstFocusable = modalRef.current?.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')
+        firstFocusable?.focus()
+      }, 50)
+
+      const handleModalKeyDown = (e) => {
+        if (e.key === 'Escape') {
+          setShowModal(false)
+          if (!consent.hasResolved) {
+            setConsent((prev) => ({ ...prev, showBanner: true }))
+          }
+        }
+        if (e.key === 'Tab' && modalRef.current) {
+          const focusables = modalRef.current.querySelectorAll('button:not([disabled]), input:not([disabled]), a[href]')
+          if (focusables.length === 0) return
+          const first = focusables[0]
+          const last = focusables[focusables.length - 1]
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault()
+            last.focus()
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault()
+            first.focus()
+          }
+        }
+      }
+
+      window.addEventListener('keydown', handleModalKeyDown)
+      return () => {
+        clearTimeout(timer)
+        window.removeEventListener('keydown', handleModalKeyDown)
+        if (lastActiveElementRef.current && typeof lastActiveElementRef.current.focus === 'function') {
+          lastActiveElementRef.current.focus()
+        }
+      }
+    }
+  }, [showModal, consent.hasResolved])
 
   const saveConsent = (allowAnalytics) => {
     const consentData = {
@@ -149,7 +192,7 @@ export default function CookieConsent() {
           aria-modal="true"
           aria-labelledby="cookie-modal-title"
         >
-          <div className="cookie-modal-card">
+          <div className="cookie-modal-card" ref={modalRef}>
             <div className="cookie-modal-header">
               <h2 id="cookie-modal-title">Předvolby souborů cookie</h2>
               <button

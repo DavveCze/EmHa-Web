@@ -32,7 +32,7 @@ export default function NaCoMysletPriRekonstrukcich() {
   ]
 
   return (
-    <main id="main">
+    <main id="main" tabIndex={-1}>
       <DetailHero
         pageKey="na-co-myslet-pri-rekonstrukcich"
         breadcrumbs={[

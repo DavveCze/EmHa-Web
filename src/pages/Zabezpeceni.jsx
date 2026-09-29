@@ -22,7 +22,7 @@ export default function Zabezpeceni() {
   ]
 
   return (
-    <main id="main">
+    <main id="main" tabIndex={-1}>
       <DetailHero
         breadcrumbs={[
           { label: 'Domů', href: '/' },

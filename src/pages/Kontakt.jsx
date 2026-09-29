@@ -9,7 +9,7 @@ export default function Kontakt() {
   const b = content?.business || defaultContent.business
 
   return (
-    <main id="main">
+    <main id="main" tabIndex={-1}>
       <div className="breadcrumbs container">
         <span>
           <a

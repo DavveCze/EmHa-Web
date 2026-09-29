@@ -10,7 +10,7 @@ export default function OpravyServis() {
   const faqItems = ROUTE_SEO['/opravy-a-servis']?.faqs || []
 
   return (
-    <main id="main">
+    <main id="main" tabIndex={-1}>
       <DetailHero
         pageKey="opravy-a-servis"
         breadcrumbs={[

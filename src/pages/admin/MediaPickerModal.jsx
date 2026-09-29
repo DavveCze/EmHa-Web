@@ -1,6 +1,17 @@
 import { useState, useEffect } from 'react'
 
-export default function MediaPickerModal({ isOpen, onClose, onSelect, csrfToken }) {
+const DEFAULT_PROJECT_ASSETS = [
+  { id: 'def-renovation', url: '/assets/renovation.jpg', alt: 'Nové měděné rozvody v bytě Ostrava', title: 'Rekonstrukce bytu' },
+  { id: 'def-newbuild', url: '/assets/new-build.jpg', alt: 'Elektroinstalace rodinného domu v Moravskoslezském kraji', title: 'Novostavba RD' },
+  { id: 'def-panel', url: '/assets/panel-detail.jpg', alt: 'Nový přehledně popsaný rozvaděč s jističi a chrániči', title: 'Bytový rozvaděč' },
+  { id: 'def-switch', url: '/assets/switch-detail.jpg', alt: 'Kompletace designových vypínačů a zásuvek', title: 'Vypínače a zásuvky' },
+  { id: 'def-electrician', url: '/assets/electrician.jpg', alt: 'Elektrikář při práci na instalaci', title: 'Elektrikář při práci' },
+  { id: 'def-ceiling', url: '/assets/ceiling-worker.jpg', alt: 'Příprava elektroinstalace v podhledu', title: 'Osvětlení a podhledy' },
+  { id: 'def-hero', url: '/assets/hero-v2.jpg', alt: 'Úvodní fotografie elektroinstalace', title: 'Hlavní úvodní foto' },
+  { id: 'def-smarthome', url: '/assets/smart-home-v2.jpg', alt: 'Zabezpečovací systém Ajax a automatizace', title: 'Ajax a automatizace' },
+]
+
+export default function MediaPickerModal({ isOpen = true, onClose, onSelect, csrfToken }) {
   const [mediaList, setMediaList] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
@@ -95,7 +106,7 @@ export default function MediaPickerModal({ isOpen, onClose, onSelect, csrfToken 
     <div className="admin-modal-overlay" onClick={onClose} role="dialog" aria-modal="true">
       <div className="admin-modal-card" onClick={(e) => e.stopPropagation()}>
         <div className="admin-modal-header">
-          <h3>Knihovna fotografií a médií</h3>
+          <h3>🖼️ Výběr fotografie z knihovny médií</h3>
           <button type="button" className="admin-modal-close" onClick={onClose} aria-label="Zavřít">
             ✕
           </button>
@@ -127,42 +138,86 @@ export default function MediaPickerModal({ isOpen, onClose, onSelect, csrfToken 
           {error && <div className="admin-msg-box error" style={{ margin: '12px 0' }}>{error}</div>}
 
           {isLoading ? (
-            <p className="admin-empty-state">Načítám knihovnu médií…</p>
-          ) : mediaList.length === 0 ? (
             <div className="admin-empty-state">
-              <p>Zatím nebyly nahrány žádné obrázky.</p>
-              <p className="muted">Nahrajte první fotografii pomocí tlačítka výše.</p>
+              <p>Načítám knihovnu médií…</p>
             </div>
           ) : (
-            <div className="admin-media-picker-grid">
-              {mediaList.map((item) => (
-                <div
-                  key={item.id}
-                  className="admin-media-picker-item"
-                  onClick={() => {
-                    onSelect(item.url, item.alt)
-                    onClose()
-                  }}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      onSelect(item.url, item.alt)
-                      onClose()
-                    }
-                  }}
-                >
-                  <img src={item.url} alt={item.alt || item.title} loading="lazy" />
-                  <div className="admin-media-picker-info">
-                    <span className="admin-media-picker-name">{item.title || item.filename}</span>
-                    <span className="admin-media-picker-meta">
-                      {item.width ? `${item.width}×${item.height} px · ` : ''}
-                      {Math.round((item.size || 0) / 1024)} kB
-                    </span>
+            <>
+              {mediaList.length > 0 && (
+                <div style={{ marginBottom: '24px' }}>
+                  <h4 style={{ margin: '0 0 12px 0', fontSize: '15px', color: 'var(--green)' }}>
+                    📂 Nahrané vlastní fotografie ({mediaList.length}):
+                  </h4>
+                  <div className="admin-media-picker-grid">
+                    {mediaList.map((item) => (
+                      <div
+                        key={item.id}
+                        className="admin-media-picker-item"
+                        onClick={() => {
+                          onSelect(item.url, item.alt)
+                          onClose()
+                        }}
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            onSelect(item.url, item.alt)
+                            onClose()
+                          }
+                        }}
+                      >
+                        <img src={item.url} alt={item.alt || item.title} loading="lazy" />
+                        <div className="admin-media-picker-info">
+                          <span className="admin-media-picker-name">{item.title || item.filename}</span>
+                          <span className="admin-media-picker-meta">
+                            {item.width ? `${item.width}×${item.height} px · ` : ''}
+                            {Math.round((item.size || 0) / 1024)} kB
+                          </span>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
-              ))}
-            </div>
+              )}
+
+              <div>
+                <h4 style={{ margin: '0 0 12px 0', fontSize: '15px', color: 'var(--green)' }}>
+                  🏛️ Připravené fotografie webu:
+                </h4>
+                {mediaList.length === 0 && (
+                  <div className="admin-empty-state" style={{ marginBottom: '16px' }}>
+                    <p>Zatím nebyly nahrány žádné vlastní soubory.</p>
+                    <p className="muted">Můžete nahrát vlastní fotku tlačítkem výše, nebo rovnou vybrat ze stávajících fotografií webu:</p>
+                  </div>
+                )}
+                <div className="admin-media-picker-grid">
+                  {DEFAULT_PROJECT_ASSETS.map((item) => (
+                    <div
+                      key={item.id}
+                      className="admin-media-picker-item"
+                      onClick={() => {
+                        onSelect(item.url, item.alt)
+                        onClose()
+                      }}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          onSelect(item.url, item.alt)
+                          onClose()
+                        }
+                      }}
+                    >
+                      <img src={item.url} alt={item.alt || item.title} loading="lazy" />
+                      <div className="admin-media-picker-info">
+                        <span className="admin-media-picker-name">{item.title}</span>
+                        <span className="admin-media-picker-meta">Základní foto webu</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
           )}
         </div>
       </div>

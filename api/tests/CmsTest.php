@@ -19,13 +19,19 @@ function assertCondition(bool $condition, string $testName): void {
 
 echo "\n--- Running EmHa CMS Security & Content Tests ---\n\n";
 
-// 1. ContentManager load & schema
-$initial = ContentManager::load();
-assertCondition(!empty($initial['business']), 'ContentManager loads valid business section');
-assertCondition(!empty($initial['seo']), 'ContentManager loads valid SEO section');
-assertCondition(is_array($initial['caseStudies']), 'ContentManager loads case studies array');
-assertCondition(is_array($initial['reviews']), 'ContentManager loads reviews array');
-assertCondition(is_array($initial['pages']), 'ContentManager loads pages dictionary');
+$initialContentRaw = file_get_contents(__DIR__ . '/../data/content.json');
+$initialRevisionsFiles = glob(__DIR__ . '/../data/revisions/*_content.json') ?: [];
+$loginAttemptsFile = __DIR__ . '/../data/login_attempts.json';
+$initialLoginAttempts = file_exists($loginAttemptsFile) ? file_get_contents($loginAttemptsFile) : null;
+
+try {
+    // 1. ContentManager load & schema
+    $initial = ContentManager::load();
+    assertCondition(!empty($initial['business']), 'ContentManager loads valid business section');
+    assertCondition(!empty($initial['seo']), 'ContentManager loads valid SEO section');
+    assertCondition(is_array($initial['caseStudies']), 'ContentManager loads case studies array');
+    assertCondition(is_array($initial['reviews']), 'ContentManager loads reviews array');
+    assertCondition(is_array($initial['pages']), 'ContentManager loads pages dictionary');
 
 // 2. Schema validation: rejects missing business section
 $invalidPayload = ['seo' => []];
@@ -96,5 +102,22 @@ assertCondition(count($afterRevisions) >= count($beforeRevisions), 'Revision lis
 $restoredContent = ContentManager::load();
 assertCondition(!empty($restoredContent['business']), 'Restored content is valid and loaded successfully');
 
-echo "\nAll 11 CMS security, content, and rollback tests PASSED successfully!\n\n";
+    echo "\nAll 11 CMS security, content, and rollback tests PASSED successfully!\n\n";
+} finally {
+    // Cleanup test artifacts to keep repository state pristine
+    if (!empty($initialContentRaw)) {
+        file_put_contents(__DIR__ . '/../data/content.json', $initialContentRaw);
+    }
+    $currentRevisionsFiles = glob(__DIR__ . '/../data/revisions/*_content.json') ?: [];
+    foreach ($currentRevisionsFiles as $rev) {
+        if (!in_array($rev, $initialRevisionsFiles, true)) {
+            @unlink($rev);
+        }
+    }
+    if ($initialLoginAttempts !== null) {
+        file_put_contents($loginAttemptsFile, $initialLoginAttempts);
+    } else {
+        @unlink($loginAttemptsFile);
+    }
+}
 

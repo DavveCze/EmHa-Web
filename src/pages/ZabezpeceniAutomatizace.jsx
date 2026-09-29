@@ -36,7 +36,7 @@ export default function ZabezpeceniAutomatizace() {
   ]
 
   return (
-    <main id="main">
+    <main id="main" tabIndex={-1}>
       <DetailHero
         pageKey="zabezpeceni-a-automatizace"
         breadcrumbs={[

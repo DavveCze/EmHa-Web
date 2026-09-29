@@ -28,7 +28,7 @@ export default function Home() {
   }
 
   return (
-    <main id="main">
+    <main id="main" tabIndex={-1}>
       <HeroSlider />
 
       <section className="intro container" aria-label="Naše výhody">

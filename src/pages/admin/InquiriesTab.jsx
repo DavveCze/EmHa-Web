@@ -187,14 +187,16 @@ export default function InquiriesTab({ csrfToken, onCountChange }) {
           </p>
         </div>
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
-          <a
-            href="/api/admin/inquiries.php?export=csv"
-            className="button outline"
-            style={{ padding: '8px 14px', fontSize: '13px', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
-            download
-          >
-            📊 Exportovat do Excelu (CSV)
-          </a>
+          {inquiries.length > 0 && (
+            <a
+              href="/api/admin/inquiries.php?export=csv"
+              className="button outline"
+              style={{ padding: '8px 14px', fontSize: '13px', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+              download
+            >
+              📊 Exportovat do Excelu (CSV)
+            </a>
+          )}
           <button
             type="button"
             className="button outline"
@@ -213,21 +215,27 @@ export default function InquiriesTab({ csrfToken, onCountChange }) {
       )}
 
       {/* Filter and Search Bar */}
-      <div
-        className="admin-filter-bar"
-        style={{
-          display: 'flex',
-          gap: '14px',
-          flexWrap: 'wrap',
-          alignItems: 'center',
-          marginBottom: '24px',
-          background: 'var(--bg)',
-          padding: '14px 18px',
-          borderRadius: '8px',
-          border: '1px solid var(--line)',
-        }}
-      >
-        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', alignItems: 'center' }}>
+      <div className="admin-filter-bar">
+        {/* Mobile dropdown selector */}
+        <label className="admin-mobile-filter-select-label" htmlFor="admin-filter-select-mobile">
+          <span>Filtrovat poptávky podle stavu:</span>
+          <select
+            id="admin-filter-select-mobile"
+            className="admin-select"
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+          >
+            <option value="all">Všechny ({inquiries.length})</option>
+            <option value="new">Nové ({newCount})</option>
+            <option value="in_progress">V řešení ({inquiries.filter((i) => i.status === 'in_progress').length})</option>
+            <option value="quoted">Naceněno ({inquiries.filter((i) => i.status === 'quoted').length})</option>
+            <option value="completed">Dokončeno ({inquiries.filter((i) => i.status === 'completed').length})</option>
+            <option value="archived">Archiv ({inquiries.filter((i) => i.status === 'archived').length})</option>
+          </select>
+        </label>
+
+        {/* Desktop filter chips */}
+        <div className="admin-desktop-filter-chips">
           <button
             type="button"
             className={`admin-filter-chip ${filterStatus === 'all' ? 'is-active' : ''}`}
@@ -273,21 +281,13 @@ export default function InquiriesTab({ csrfToken, onCountChange }) {
           </button>
         </div>
 
-        <div style={{ marginLeft: 'auto', minWidth: '240px', flex: '1 1 280px' }}>
+        <div className="admin-search-wrap">
           <input
             type="search"
+            className="admin-search-input"
             placeholder="🔍 Hledat podle jména, telefonu, textu…"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            style={{
-              width: '100%',
-              padding: '9px 14px',
-              fontSize: '14px',
-              borderRadius: '6px',
-              background: 'var(--input)',
-              border: '1px solid #b2bcaf',
-              color: 'var(--text)',
-            }}
           />
         </div>
       </div>
@@ -414,7 +414,7 @@ export default function InquiriesTab({ csrfToken, onCountChange }) {
                 </div>
 
                 {/* Contact and message details */}
-                <div style={{ margin: '16px 0', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '18px' }}>
+                <div style={{ margin: '16px 0', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 250px), 1fr))', gap: '18px' }}>
                   <div>
                     <div style={{ fontSize: '12px', color: 'var(--muted)', textTransform: 'uppercase', fontWeight: 600, marginBottom: '6px' }}>
                       Kontakt:

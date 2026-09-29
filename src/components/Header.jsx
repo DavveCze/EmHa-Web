@@ -36,6 +36,9 @@ export default function Header() {
     }
   }, [isDark])
 
+  const menuToggleRef = useRef(null)
+  const servicesToggleRef = useRef(null)
+
   // Close menus on outside click or escape
   useEffect(() => {
     function handleClickOutside(e) {
@@ -51,8 +54,10 @@ export default function Header() {
       if (e.key === 'Escape') {
         if (servicesOpen) {
           setServicesOpen(false)
+          servicesToggleRef.current?.focus()
         } else if (menuOpen) {
           setMenuOpen(false)
+          menuToggleRef.current?.focus()
         }
       }
     }
@@ -126,6 +131,7 @@ export default function Header() {
         </a>
 
         <button
+          ref={menuToggleRef}
           className="menu-toggle round"
           aria-expanded={menuOpen}
           aria-controls="navigation"
@@ -156,6 +162,7 @@ export default function Header() {
 
           <div className="dropdown" ref={dropdownRef}>
             <button
+              ref={servicesToggleRef}
               className="services-toggle"
               aria-expanded={servicesOpen}
               aria-controls="service-menu"

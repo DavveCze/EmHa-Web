@@ -1,4 +1,4 @@
-export default function ProcessSection({ variant = 'service' }) {
+export default function ProcessSection({ variant = 'service', isH1 = false }) {
   const steps = [
     {
       number: '01',
@@ -57,7 +57,11 @@ export default function ProcessSection({ variant = 'service' }) {
       <div className="container">
         <div>
           <p className="eyebrow">Takhle budeme postupovat</p>
-          <h2>Od první domluvy k hotové práci.</h2>
+          {isH1 ? (
+            <h1>Od první domluvy k hotové práci.</h1>
+          ) : (
+            <h2>Od první domluvy k hotové práci.</h2>
+          )}
         </div>
         <ol className="steps">
           {steps.map((s) => (

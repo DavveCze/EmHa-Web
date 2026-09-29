@@ -137,6 +137,8 @@ export default function Gallery({
     touchStartX.current = null
   }
 
+  const lastActiveTriggerRef = useRef(null)
+
   // Handle keyboard escape and body scroll lock for lightbox
   useEffect(() => {
     function handleKeyDown(e) {
@@ -145,12 +147,16 @@ export default function Gallery({
       }
     }
     if (lightboxItem) {
+      lastActiveTriggerRef.current = document.activeElement
       document.body.style.overflow = 'hidden'
       window.addEventListener('keydown', handleKeyDown)
     }
     return () => {
       document.body.style.overflow = ''
       window.removeEventListener('keydown', handleKeyDown)
+      if (lastActiveTriggerRef.current && typeof lastActiveTriggerRef.current.focus === 'function') {
+        lastActiveTriggerRef.current.focus()
+      }
     }
   }, [lightboxItem])
 

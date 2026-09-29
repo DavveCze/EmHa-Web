@@ -10,7 +10,7 @@ export default function DataSlaboproud() {
   const faqItems = ROUTE_SEO['/data-a-slaboproud']?.faqs || []
 
   return (
-    <main id="main">
+    <main id="main" tabIndex={-1}>
       <DetailHero
         pageKey="data-a-slaboproud"
         breadcrumbs={[

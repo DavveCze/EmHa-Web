@@ -7,7 +7,7 @@ export default function ZasadyOchranyUdaju() {
   const b = content?.business || defaultContent.business
 
   return (
-    <main id="main">
+    <main id="main" tabIndex={-1}>
       <DetailHero
         breadcrumbs={[
           { label: 'Domů', href: '/' },
@@ -36,7 +36,7 @@ export default function ZasadyOchranyUdaju() {
               dle čl. 13 a 14 Obecného nařízení o ochraně osobních údajů (GDPR).
             </p>
 
-            <h3 style={{ marginTop: '32px', marginBottom: '12px', color: 'var(--green)' }}>1. Kdo je správcem vašich osobních údajů?</h3>
+            <h2 style={{ marginTop: '32px', marginBottom: '12px', fontSize: '1.35rem', color: 'var(--green)' }}>1. Kdo je správcem vašich osobních údajů?</h2>
             <p>
               Správcem osobních údajů je:
               <br />
@@ -53,7 +53,7 @@ export default function ZasadyOchranyUdaju() {
               Telefon: <a href={`tel:${b.phoneRaw || '+420731833605'}`}>{b.phone || '+420 731 833 605'}</a>
             </p>
 
-            <h3 style={{ marginTop: '32px', marginBottom: '12px', color: 'var(--green)' }}>2. Jaké údaje zpracováváme a proč?</h3>
+            <h2 style={{ marginTop: '32px', marginBottom: '12px', fontSize: '1.35rem', color: 'var(--green)' }}>2. Jaké údaje zpracováváme a proč?</h2>
             <p>
               Zpracováváme pouze údaje nezbytné k vyřízení vašeho požadavku, které nám sami dobrovolně
               poskytnete prostřednictvím poptávkového formuláře nebo telefonicky:
@@ -65,7 +65,7 @@ export default function ZasadyOchranyUdaju() {
               <li><strong>Technické údaje (IP adresa, čas odeslání)</strong> – z důvodu ochrany webu před roboty, spamem a DDoS útoky (oprávněný zájem).</li>
             </ul>
 
-            <h3 style={{ marginTop: '32px', marginBottom: '12px', color: 'var(--green)' }}>3. Právní základ zpracování</h3>
+            <h2 style={{ marginTop: '32px', marginBottom: '12px', fontSize: '1.35rem', color: 'var(--green)' }}>3. Právní základ zpracování</h2>
             <ul style={{ paddingLeft: '20px', marginBottom: '16px' }}>
               <li>
                 <strong>Plnění předsmluvních opatření na žádost zákazníka</strong> (čl. 6 odst. 1 písm. b GDPR): Zpracování údajů je nutné k tomu, abychom vás mohli kontaktovat, navrhnout technické řešení a připravit nezávaznou cenovou nabídku elektroinstalace.
@@ -78,7 +78,7 @@ export default function ZasadyOchranyUdaju() {
               </li>
             </ul>
 
-            <h3 style={{ marginTop: '32px', marginBottom: '12px', color: 'var(--green)' }}>4. Jak dlouho údaje uchováváme?</h3>
+            <h2 style={{ marginTop: '32px', marginBottom: '12px', fontSize: '1.35rem', color: 'var(--green)' }}>4. Jak dlouho údaje uchováváme?</h2>
             <p>
               Údaje z poptávkového formuláře uchováváme po dobu nezbytnou k vyřízení poptávky a komunikaci
               o realizaci zakázky. Pokud nedojde k uzavření smlouvy o dílo ani realizaci, údaje jsou
@@ -86,7 +86,7 @@ export default function ZasadyOchranyUdaju() {
               a smluvní doklady uchovávány po dobu stanovenou daňovými a účetními zákony ČR (zpravidla 5 až 10 let).
             </p>
 
-            <h3 style={{ marginTop: '32px', marginBottom: '12px', color: 'var(--green)' }}>5. Kdo má k údajům přístup (Příjemci údajů)?</h3>
+            <h2 style={{ marginTop: '32px', marginBottom: '12px', fontSize: '1.35rem', color: 'var(--green)' }}>5. Kdo má k údajům přístup (Příjemci údajů)?</h2>
             <p>
               Vaše údaje neprodáváme, nepronajímáme ani neposkytujeme žádným marketingovým třetím stranám.
               Přístup k nim mají pouze prověření poskytovatelé technické infrastruktury nezbytné pro provoz webu:
@@ -97,7 +97,7 @@ export default function ZasadyOchranyUdaju() {
               <li>Certifikovaný revizní technik či projektant – pouze v případě sjednané realizace zakázky pro vyhotovení revizní zprávy.</li>
             </ul>
 
-            <h3 style={{ marginTop: '32px', marginBottom: '12px', color: 'var(--green)' }}>6. Jaká máte práva dle GDPR?</h3>
+            <h2 style={{ marginTop: '32px', marginBottom: '12px', fontSize: '1.35rem', color: 'var(--green)' }}>6. Jaká máte práva dle GDPR?</h2>
             <p>V souvislosti se zpracováním vašich osobních údajů máte ze zákona tato práva:</p>
             <ul style={{ paddingLeft: '20px', marginBottom: '16px' }}>
               <li><strong>Právo na přístup</strong> k vašim osobním údajům a informacím o jejich zpracování.</li>
@@ -110,7 +110,7 @@ export default function ZasadyOchranyUdaju() {
               </li>
             </ul>
 
-            <h3 style={{ marginTop: '32px', marginBottom: '12px', color: 'var(--green)' }}>7. Zabezpečení dat</h3>
+            <h2 style={{ marginTop: '32px', marginBottom: '12px', fontSize: '1.35rem', color: 'var(--green)' }}>7. Zabezpečení dat</h2>
             <p>
               Provoz tohoto webu probíhá výhradně přes šifrované spojení HTTPS s bezpečnostními hlavičkami.
               Přístup k evidenci poptávek je chráněn silným kryptografickým hashováním (Argon2id),

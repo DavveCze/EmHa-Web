@@ -41,7 +41,7 @@ class ContentManager {
             $timestamp = date('Y-m-d_H-i-s');
             $backupFile = self::REVISIONS_DIR . '/' . $timestamp . '_content.json';
             @copy(self::DATA_FILE, $backupFile);
-            self::pruneRevisions(30);
+            self::pruneRevisions(60);
         }
 
         // 2. Atomic write using temporary file + shared process lock + rename
@@ -142,7 +142,7 @@ class ContentManager {
                 $counter++;
             }
             @copy(self::DATA_FILE, $backupFile);
-            self::pruneRevisions(30);
+            self::pruneRevisions(60);
         }
 
         // 2. Atomic write using temporary file + shared process lock + rename
@@ -184,7 +184,7 @@ class ContentManager {
         }
     }
 
-    private static function pruneRevisions(int $maxKeep = 30): void {
+    private static function pruneRevisions(int $maxKeep = 60): void {
         $files = glob(self::REVISIONS_DIR . '/*_content.json') ?: [];
         if (count($files) <= $maxKeep) return;
 

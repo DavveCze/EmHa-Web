@@ -8,8 +8,8 @@ export default function JakPracujeme() {
   const faqItems = ROUTE_SEO['/jak-pracujeme']?.faqs || []
 
   return (
-    <main id="main">
-      <ProcessSection variant="service" />
+    <main id="main" tabIndex={-1}>
+      <ProcessSection variant="service" isH1={true} />
 
       <section className="section sage">
         <div className="container">

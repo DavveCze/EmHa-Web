@@ -37,7 +37,7 @@ export default function Rekonstrukce() {
   ]
 
   return (
-    <main id="main">
+    <main id="main" tabIndex={-1}>
       <DetailHero
         pageKey="rekonstrukce"
         breadcrumbs={[

@@ -253,14 +253,14 @@ export default function InquiryForm({
                   placeholder="Např. +420 777 123 456 nebo e-mail"
                   required
                   maxLength={150}
-                  aria-describedby="contact-error"
+                  aria-describedby={contactError ? 'contact-error' : undefined}
                   aria-invalid={Boolean(contactError)}
                   value={contact}
                   onChange={handleContactChange}
                   disabled={isSubmitting}
                 />
                 {contactError && (
-                  <span id="contact-error" className="field-error">
+                  <span id="contact-error" className="field-error" role="alert" aria-live="polite">
                     {contactError}
                   </span>
                 )}
@@ -344,6 +344,7 @@ export default function InquiryForm({
                 ref={statusRef}
                 className={`form-status ${isSuccess ? 'is-success' : ''} ${isError ? 'is-error' : ''}`}
                 role="status"
+                aria-live="polite"
                 tabIndex={-1}
               >
                 {statusMessage}

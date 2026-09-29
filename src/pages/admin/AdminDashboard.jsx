@@ -151,10 +151,12 @@ export default function AdminDashboard({ onLogout, csrfToken }) {
 
         <div className="admin-header-actions">
           <a href="/" target="_blank" rel="noopener noreferrer" className="admin-view-site-link">
-            Zobrazit web ↗
+            <span className="hide-mobile">Zobrazit web ↗</span>
+            <span className="show-mobile">🌐 Web</span>
           </a>
           <button type="button" className="button outline" onClick={onLogout} style={{ padding: '8px 14px', fontSize: '13px' }}>
-            Odhlásit se
+            <span className="hide-mobile">Odhlásit se</span>
+            <span className="show-mobile">Odhlásit</span>
           </button>
         </div>
       </header>
@@ -165,7 +167,7 @@ export default function AdminDashboard({ onLogout, csrfToken }) {
           <div className="floating-bar-info">
             <span className="floating-dot" />
             <strong>Máte neuložené úpravy</strong>
-            <small>Změny se na veřejném webu projeví až po kliknutí na tlačítko Uložit.</small>
+            <small className="hide-mobile">Změny se na veřejném webu projeví až po kliknutí na tlačítko Uložit.</small>
           </div>
           <div className="floating-bar-btns">
             <button type="button" className="button outline" onClick={handleDiscard} disabled={isSaving}>

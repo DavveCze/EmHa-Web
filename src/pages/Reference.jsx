@@ -70,7 +70,7 @@ export default function Reference() {
   ]
 
   return (
-    <main id="main">
+    <main id="main" tabIndex={-1}>
       <DetailHero
         pageKey="reference"
         breadcrumbs={[
