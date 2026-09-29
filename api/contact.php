@@ -41,7 +41,9 @@ if ($contentLength > 32768) {
 
 require_once __DIR__ . '/Security.php';
 require_once __DIR__ . '/Mailer.php';
-require_once __DIR__ . '/admin/InquiryManager.php';
+if (file_exists(__DIR__ . '/admin/InquiryManager.php')) {
+    require_once __DIR__ . '/admin/InquiryManager.php';
+}
 
 // Parse JSON or form data
 $rawBody = file_get_contents('php://input');
@@ -114,11 +116,13 @@ $data['country'] = $geoCheck['country'];
 $data['referrer'] = $_SERVER['HTTP_REFERER'] ?? 'Webové stránky EmHa';
 
 try {
-    // 5. Persist inquiry into CRM database (failsafe against SMTP/spam loss)
-    try {
-        InquiryManager::recordInquiry($data);
-    } catch (Throwable $e) {
-        error_log('EmHa contact.php: Failed to record inquiry in InquiryManager: ' . $e->getMessage());
+    // 5. Persist inquiry into CRM database if InquiryManager is available (CMS mode)
+    if (class_exists('InquiryManager')) {
+        try {
+            InquiryManager::recordInquiry($data);
+        } catch (Throwable $e) {
+            error_log('EmHa contact.php: Failed to record inquiry in InquiryManager: ' . $e->getMessage());
+        }
     }
 
     $adminSent = $mailer->sendAdminNotification($data);

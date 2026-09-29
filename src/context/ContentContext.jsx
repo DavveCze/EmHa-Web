@@ -2,10 +2,14 @@ import { useState, useEffect, useCallback } from 'react'
 import defaultContent from '../data/defaultContent.json'
 import { ContentContext } from './content-core.js'
 
+const IS_CMS_ENABLED = import.meta.env.VITE_CMS_ENABLED !== 'false'
+
 export function ContentProvider({ children }) {
   const [content, setContent] = useState(defaultContent)
 
   const refreshContent = useCallback(async (newContent) => {
+    if (!IS_CMS_ENABLED) return
+
     if (newContent && typeof newContent === 'object' && newContent.business) {
       setContent(newContent)
       try {
@@ -35,6 +39,8 @@ export function ContentProvider({ children }) {
   }, [])
 
   useEffect(() => {
+    if (!IS_CMS_ENABLED) return
+
     let ignore = false
     async function initFetch() {
       try {

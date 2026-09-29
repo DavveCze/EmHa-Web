@@ -7,7 +7,7 @@
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
 
 /* Source-aligned visual system — revision 2. */
-@font-face{font-family:Inter;src:url('/assets/fonts/Inter.ttf') format('truetype');font-weight:100 900;font-style:normal;font-display:swap}
+@font-face{font-family:Inter;src:url('/assets/fonts/Inter.woff2') format('woff2'),url('/assets/fonts/Inter.ttf') format('truetype');font-weight:100 900;font-style:normal;font-display:swap}
 :root{--bg:#f4f3ee;--text:#283b30;--muted:#70786a;--green:#184e3e;--sage:#dfe5d9;--form:#ecede5;--line:#dce0d6;--yellow:#dfbf55;--input:#fafbf6}
 body{font-family:Inter,Arial,sans-serif;font-weight:400;font-size:18px;line-height:1.6;-webkit-font-smoothing:antialiased}
 h1,h2{font-weight:600;letter-spacing:-.048em;text-wrap:balance}

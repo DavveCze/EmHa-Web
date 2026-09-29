@@ -179,9 +179,18 @@
         }
       ],
       "benefits": [
-        { "title": "Od návrhu po dokončení", "text": "Vše potřebné pro vaši elektroinstalaci." },
-        { "title": "Konzultace zdarma", "text": "Nejdřív si společně projdeme váš záměr." },
-        { "title": "Ostrava a okolí", "text": "Pro byty, rodinné domy i menší opravy." }
+        {
+          "title": "Od návrhu po dokončení",
+          "text": "Vše potřebné pro vaši elektroinstalaci."
+        },
+        {
+          "title": "Konzultace zdarma",
+          "text": "Nejdřív si společně projdeme váš záměr."
+        },
+        {
+          "title": "Ostrava a okolí",
+          "text": "Pro byty, rodinné domy i menší opravy."
+        }
       ],
       "servicesHeading": {
         "title": "S čím vám pomůžeme?",
@@ -191,7 +200,9 @@
         "feature": {
           "eyebrow": "Elektroinstalace od základu",
           "title": "Od rozvodů\npo poslední zásuvku.",
-          "description": "Kam přijde lampa? A kde bude stůl?\nProjdeme s vámi i běžné detaily,\naby zásuvky byly tam, kde je potřebujete."
+          "description": "Kam přijde lampa? A kde bude stůl?\nProjdeme s vámi i běžné detaily,\naby zásuvky byly tam, kde je potřebujete.",
+          "image": "",
+          "imageAlt": ""
         }
       }
     },
@@ -203,18 +214,37 @@
         "image": "/assets/new-build.jpg",
         "imageAlt": "Elektroinstalace v novostavbě — rodinný dům",
         "availability": "Ostrava a okolí · Individuální cenová nabídka",
-        "ctaText": "Poptat elektroinstalaci"
+        "ctaText": "Poptat elektroinstalaci",
+        "ctaHref": "#poptavka"
       },
       "sections": {
         "soucasti": {
           "eyebrow": "Co bude součástí",
           "title": "Elektroinstalace, která\npočítá s vaším životem.",
           "description": "Kde budete vařit, pracovat nebo nabíjet telefon? Dobrá instalace začíná u běžných věcí. Společně z nich uděláme konkrétní plán.",
+          "image": "",
+          "imageAlt": "",
           "items": [
-            { "num": "01", "title": "Rozvody a rozvaděč", "text": "Připravíme elektrické rozvody a rozvaděč podle domluveného rozsahu a potřeb vašeho domu." },
-            { "num": "02", "title": "Zásuvky a osvětlení", "text": "Společně projdeme umístění zásuvek, vypínačů a světel. Podle nábytku i každodenního provozu." },
-            { "num": "03", "title": "Data a příprava do budoucna", "text": "Promyslíme datové zásuvky i přípravu pro zabezpečení nebo chytrou domácnost." },
-            { "num": "04", "title": "Dokumentace a revize", "text": "Projektovou dokumentaci a revizi zajistíme ve spolupráci s projektantem a revizním technikem." }
+            {
+              "num": "01",
+              "title": "Rozvody a rozvaděč",
+              "text": "Připravíme elektrické rozvody a rozvaděč podle domluveného rozsahu a potřeb vašeho domu."
+            },
+            {
+              "num": "02",
+              "title": "Zásuvky a osvětlení",
+              "text": "Společně projdeme umístění zásuvek, vypínačů a světel. Podle nábytku i každodenního provozu."
+            },
+            {
+              "num": "03",
+              "title": "Data a příprava do budoucna",
+              "text": "Promyslíme datové zásuvky i přípravu pro zabezpečení nebo chytrou domácnost."
+            },
+            {
+              "num": "04",
+              "title": "Dokumentace a revize",
+              "text": "Projektovou dokumentaci a revizi zajistíme ve spolupráci s projektantem a revizním technikem."
+            }
           ]
         },
         "detaily": {
@@ -232,9 +262,18 @@
         }
       },
       "links": [
-        { "href": "/rekonstrukce", "label": "Rekonstrukce" },
-        { "href": "/zabezpeceni", "label": "Zabezpečení" },
-        { "href": "/opravy-a-servis", "label": "Opravy a servis" }
+        {
+          "href": "/rekonstrukce",
+          "label": "Rekonstrukce"
+        },
+        {
+          "href": "/zabezpeceni",
+          "label": "Zabezpečení"
+        },
+        {
+          "href": "/opravy-a-servis",
+          "label": "Opravy a servis"
+        }
       ]
     },
     "rekonstrukce": {
@@ -245,18 +284,37 @@
         "image": "/assets/renovation.jpg",
         "imageAlt": "Rekonstrukce bytů a domů — ilustrační vizuál",
         "availability": "Ostrava a okolí · Individuální cenová nabídka",
-        "ctaText": "Poptat rekonstrukci elektro"
+        "ctaText": "Poptat rekonstrukci elektro",
+        "ctaHref": "#poptavka"
       },
       "sections": {
         "soucasti": {
           "eyebrow": "Co bude součástí",
-          "title": "Nová elektřina.\nPromyšlená od začátku.",
+          "title": "Testovací nadpis sekce",
           "description": "Rekonstrukce je příležitost upravit instalaci podle současných potřeb. Společně projdeme stávající stav, plán místností a návaznost na ostatní práce.",
+          "image": "",
+          "imageAlt": "",
           "items": [
-            { "num": "01", "title": "Posouzení stávající instalace", "text": "Projdeme stav rozvodů a domluvíme, co bude potřeba vyměnit. Rozsah stanovíme podle konkrétního objektu." },
-            { "num": "02", "title": "Výměna rozvodů a rozvaděče", "text": "Připravíme novou instalaci podle plánu a koordinujeme její provedení s dalšími řemesly." },
-            { "num": "03", "title": "Zásuvky, vypínače a světla", "text": "Upravíme jejich umístění podle nové kuchyně, nábytku a běžného provozu domácnosti." },
-            { "num": "04", "title": "Dokončení a kontrola", "text": "Osadíme koncové prvky. Potřebnou revizi zajistíme ve spolupráci s revizním technikem." }
+            {
+              "num": "01",
+              "title": "Posouzení stávající instalace",
+              "text": "Projdeme stav rozvodů a domluvíme, co bude potřeba vyměnit. Rozsah stanovíme podle konkrétního objektu."
+            },
+            {
+              "num": "02",
+              "title": "Výměna rozvodů a rozvaděče",
+              "text": "Připravíme novou instalaci podle plánu a koordinujeme její provedení s dalšími řemesly."
+            },
+            {
+              "num": "03",
+              "title": "Zásuvky, vypínače a světla",
+              "text": "Upravíme jejich umístění podle nové kuchyně, nábytku a běžného provozu domácnosti."
+            },
+            {
+              "num": "04",
+              "title": "Dokončení a kontrola",
+              "text": "Osadíme koncové prvky. Potřebnou revizi zajistíme ve spolupráci s revizním technikem."
+            }
           ]
         },
         "detaily": {
@@ -274,9 +332,10 @@
         }
       },
       "links": [
-        { "href": "/elektroinstalace", "label": "Elektroinstalace" },
-        { "href": "/zabezpeceni", "label": "Zabezpečení" },
-        { "href": "/opravy-a-servis", "label": "Opravy a servis" }
+        {
+          "href": "/test",
+          "label": "Test Link"
+        }
       ]
     },
     "zabezpeceni-a-automatizace": {
@@ -287,7 +346,8 @@
         "image": "/assets/smart-home-v2.jpg",
         "imageAlt": "Zabezpečení Ajax a chytrá domácnost",
         "availability": "Ostrava a celý Moravskoslezský kraj",
-        "ctaText": "Poptat zabezpečení a automatizaci"
+        "ctaText": "Poptat zabezpečení a automatizaci",
+        "ctaHref": "#poptavka"
       }
     },
     "na-co-myslet-pri-rekonstrukcich": {
@@ -298,7 +358,8 @@
         "image": "/assets/panel-detail.jpg",
         "imageAlt": "Plánování rozvodů a rozvaděče",
         "availability": "Konzultace na stavbě zdarma",
-        "ctaText": "Probrat plán vaší rekonstrukce"
+        "ctaText": "Probrat plán vaší rekonstrukce",
+        "ctaHref": "#poptavka"
       }
     },
     "opravy-a-servis": {
@@ -309,7 +370,8 @@
         "image": "/assets/switch-detail.jpg",
         "imageAlt": "Oprava zásuvek a vypínačů",
         "availability": "Ostrava, Havířov a okolí",
-        "ctaText": "Objednat opravu"
+        "ctaText": "Objednat opravu",
+        "ctaHref": "#poptavka"
       }
     },
     "data-a-slaboproud": {
@@ -320,7 +382,8 @@
         "image": "/assets/ceiling-worker.jpg",
         "imageAlt": "Instalace datových rozvodů a kabeláže",
         "availability": "Ostrava a okolí",
-        "ctaText": "Poptat datové rozvody"
+        "ctaText": "Poptat datové rozvody",
+        "ctaHref": "#poptavka"
       }
     },
     "jak-pracujeme": {
@@ -331,7 +394,8 @@
         "image": "/assets/electrician.jpg",
         "imageAlt": "Elektrikář při odborném zapojení a měření",
         "availability": "Ostrava a okolí",
-        "ctaText": "Domluvit nezávaznou konzultaci"
+        "ctaText": "Domluvit nezávaznou konzultaci",
+        "ctaHref": "#poptavka"
       }
     },
     "reference": {
@@ -342,14 +406,20 @@
         "image": "/assets/panel-detail.jpg",
         "imageAlt": "Detail precizně zapojeného domovního rozvaděče",
         "availability": "Ostrava, Havířov, Frýdek-Místek, Karviná a okolí",
-        "ctaText": "Poptat kalkulaci pro váš projekt"
+        "ctaText": "Poptat kalkulaci pro váš projekt",
+        "ctaHref": "#poptavka"
       }
     },
     "kontakt": {
       "hero": {
         "eyebrow": "Spojte se s námi",
         "title": "Kontaktní údaje a nezávazná poptávka",
-        "description": "Pro byty, rodinné domy i menší opravy. Působíme v Ostravě a celém Moravskoslezském kraji. Realizaci v konkrétní lokalitě a termín domluvíme individuálně."
+        "description": "Pro byty, rodinné domy i menší opravy. Působíme v Ostravě a celém Moravskoslezském kraji. Realizaci v konkrétní lokalitě a termín domluvíme individuálně.",
+        "image": "",
+        "imageAlt": "",
+        "availability": "",
+        "ctaText": "",
+        "ctaHref": "#poptavka"
       }
     }
   }

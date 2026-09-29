@@ -1,6 +1,5 @@
 import DetailHero from '../components/DetailHero.jsx'
 import AnchorNav from '../components/AnchorNav.jsx'
-import ProcessSection from '../components/ProcessSection.jsx'
 import FaqSection from '../components/FaqSection.jsx'
 import InquiryForm from '../components/InquiryForm.jsx'
 import RelatedServices from '../components/RelatedServices.jsx'
@@ -108,11 +107,19 @@ export default function Elektroinstalace() {
 
       <section className="section sage" id="detaily">
         <div className="container split">
-          <img
-            src={detaily?.image || '/assets/switch-detail.jpg'}
-            alt={detaily?.imageAlt || 'Detail vypínače v domácnosti — ilustrační vizuál'}
-            loading="lazy"
-          />
+          <picture>
+            {typeof (detaily?.image || '/assets/switch-detail.jpg') === 'string' && (detaily?.image || '/assets/switch-detail.jpg').endsWith('.jpg') && (
+              <source srcSet={(detaily?.image || '/assets/switch-detail.jpg').replace(/\.jpg$/, '.webp')} type="image/webp" />
+            )}
+            <img
+              src={detaily?.image || '/assets/switch-detail.jpg'}
+              alt={detaily?.imageAlt || 'Detail vypínače v domácnosti — ilustrační vizuál'}
+              loading="lazy"
+              decoding="async"
+              width="540"
+              height="390"
+            />
+          </picture>
           <div>
             <p className="eyebrow">{detaily?.eyebrow || 'Malé detaily. Velký rozdíl.'}</p>
             <h2>

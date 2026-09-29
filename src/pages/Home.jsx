@@ -147,11 +147,17 @@ export default function Home() {
               onClick={(e) => handleLink(e, '/elektroinstalace')}
             >
               <div className="feature-image">
-                <img
-                  src="/assets/new-build.jpg"
-                  alt="Montáž vypínače – ilustrační vizuál"
-                  loading="lazy"
-                />
+                <picture>
+                  <source srcSet="/assets/new-build.webp" type="image/webp" />
+                  <img
+                    src="/assets/new-build.jpg"
+                    alt="Montáž vypínače – ilustrační vizuál"
+                    loading="lazy"
+                    decoding="async"
+                    width="540"
+                    height="290"
+                  />
+                </picture>
                 <span className="tag">Od základu</span>
               </div>
               <h3>
@@ -170,11 +176,17 @@ export default function Home() {
               onClick={(e) => handleLink(e, '/rekonstrukce')}
             >
               <div className="feature-image">
-                <img
-                  src="/assets/renovation.jpg"
-                  alt="Práce na elektroinstalaci – ilustrační vizuál"
-                  loading="lazy"
-                />
+                <picture>
+                  <source srcSet="/assets/renovation.webp" type="image/webp" />
+                  <img
+                    src="/assets/renovation.jpg"
+                    alt="Práce na elektroinstalaci – ilustrační vizuál"
+                    loading="lazy"
+                    decoding="async"
+                    width="540"
+                    height="290"
+                  />
+                </picture>
                 <span className="tag">S novou energií</span>
               </div>
               <h3>

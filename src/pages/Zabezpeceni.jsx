@@ -109,11 +109,17 @@ export default function Zabezpeceni() {
 
       <section className="section sage" id="detaily">
         <div className="container split">
-          <img
-            src="/assets/smart-home-v2.jpg"
-            alt="Zabezpečení domácnosti — ilustrační vizuál"
-            loading="lazy"
-          />
+          <picture>
+            <source srcSet="/assets/smart-home-v2.webp" type="image/webp" />
+            <img
+              src="/assets/smart-home-v2.jpg"
+              alt="Zabezpečení domácnosti — ilustrační vizuál"
+              loading="lazy"
+              decoding="async"
+              width="540"
+              height="390"
+            />
+          </picture>
           <div>
             <p className="eyebrow">Promyslíme to spolu</p>
             <h2>

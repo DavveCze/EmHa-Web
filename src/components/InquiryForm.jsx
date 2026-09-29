@@ -131,20 +131,24 @@ export default function InquiryForm({
   }
 
   return (
-    <section className={`contact-section ${isHome ? 'contact-home' : ''}`} id="poptavka">
+    <section className={`contact-section ${isHome ? 'contact-home' : ''}`} id="poptavka" style={{ paddingBottom: '3rem' }}>
       <div className="container contact-grid">
         <div>
           <p className="eyebrow">{eyebrow}</p>
           <h2>{title}</h2>
           {showWorkerPhoto && (
             <div className="contact-photo">
-              <img
-                src="/assets/contact-worker.png"
-                alt="Ilustrační elektrikář při práci"
-                loading="lazy"
-                width="420"
-                height="455"
-              />
+              <picture>
+                <source srcSet="/assets/contact-worker.webp" type="image/webp" />
+                <img
+                  src="/assets/contact-worker.png"
+                  alt="Ilustrační elektrikář při práci"
+                  loading="lazy"
+                  decoding="async"
+                  width="420"
+                  height="455"
+                />
+              </picture>
             </div>
           )}
         </div>

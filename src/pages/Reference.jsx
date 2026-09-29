@@ -140,7 +140,15 @@ export default function Reference() {
             {caseStudies.map((item) => (
               <article key={item.id} className="case-card">
                 <div className="case-image">
-                  <img src={item.image} alt={item.imageAlt} loading="lazy" width="540" height="220" />
+                  <picture>
+                    {typeof item.image === 'string' && item.image.endsWith('.jpg') && (
+                      <source srcSet={item.image.replace(/\.jpg$/, '.webp')} type="image/webp" />
+                    )}
+                    {typeof item.image === 'string' && item.image.endsWith('.png') && (
+                      <source srcSet={item.image.replace(/\.png$/, '.webp')} type="image/webp" />
+                    )}
+                    <img src={item.image} alt={item.imageAlt} loading="lazy" decoding="async" width="540" height="220" />
+                  </picture>
                   <span className="case-badge">{item.badge}</span>
                 </div>
                 <div className="case-body">

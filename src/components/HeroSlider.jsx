@@ -139,7 +139,9 @@ export default function HeroSlider() {
           src={s.image}
           alt={idx === current ? s.alt : ''}
           aria-hidden={idx !== current}
+          loading={idx === 0 ? 'eager' : 'lazy'}
           fetchPriority={idx === 0 ? 'high' : 'low'}
+          decoding={idx === 0 ? 'sync' : 'async'}
           style={{
             opacity: idx === current ? 1 : 0,
             transition: 'opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1)',

@@ -82,7 +82,23 @@ export default function DetailHero({
 
         {imageSrc && (
           <figure className="detail-visual">
-            <img src={imageSrc} alt={imageAlt} fetchPriority="high" />
+            <picture>
+              {typeof imageSrc === 'string' && imageSrc.endsWith('.jpg') && (
+                <source srcSet={imageSrc.replace(/\.jpg$/, '.webp')} type="image/webp" />
+              )}
+              {typeof imageSrc === 'string' && imageSrc.endsWith('.png') && (
+                <source srcSet={imageSrc.replace(/\.png$/, '.webp')} type="image/webp" />
+              )}
+              <img
+                src={imageSrc}
+                alt={imageAlt}
+                fetchPriority="high"
+                loading="eager"
+                decoding="sync"
+                width="540"
+                height="450"
+              />
+            </picture>
             {caption && <figcaption>{caption}</figcaption>}
           </figure>
         )}

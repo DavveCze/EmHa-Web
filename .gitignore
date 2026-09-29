@@ -18,6 +18,7 @@ lerna-debug.log*
 # 2. Výstupy sestavení a produkční balíčky (Build artifacts)
 # ------------------------------------------------------------------------------
 dist/
+dist-clean/
 dist-ssr/
 build/
 out/

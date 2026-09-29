@@ -108,11 +108,19 @@ export default function Rekonstrukce() {
 
       <section className="section sage" id="detaily">
         <div className="container split">
-          <img
-            src={detaily?.image || '/assets/renovation.jpg'}
-            alt={detaily?.imageAlt || 'Rekonstrukce bytů a domů — ilustrační vizuál'}
-            loading="lazy"
-          />
+          <picture>
+            {typeof (detaily?.image || '/assets/renovation.jpg') === 'string' && (detaily?.image || '/assets/renovation.jpg').endsWith('.jpg') && (
+              <source srcSet={(detaily?.image || '/assets/renovation.jpg').replace(/\.jpg$/, '.webp')} type="image/webp" />
+            )}
+            <img
+              src={detaily?.image || '/assets/renovation.jpg'}
+              alt={detaily?.imageAlt || 'Rekonstrukce bytů a domů — ilustrační vizuál'}
+              loading="lazy"
+              decoding="async"
+              width="540"
+              height="390"
+            />
+          </picture>
           <div>
             <p className="eyebrow">{detaily?.eyebrow || 'Promyslíme to spolu'}</p>
             <h2>

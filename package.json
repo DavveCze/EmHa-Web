@@ -5,7 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node -e \"const fs = require('fs'); fs.cpSync('api', 'dist/api', { recursive: true });\"",
+    "build": "node scripts/build-export.js --mode=both",
+    "build:cms": "node scripts/build-export.js --mode=cms",
+    "build:clean": "node scripts/build-export.js --mode=clean",
+    "build:both": "node scripts/build-export.js --mode=both",
     "preview": "vite preview",
     "lint": "eslint .",
     "typecheck": "node -e 'console.log(\"Typecheck: čistý JavaScript projekt bez TypeScriptu\")' --",

@@ -4,8 +4,7 @@ export default function AnchorNav({
   items = [
     { href: '#soucasti', number: '01', label: 'Co zajistíme' },
     { href: '#detaily', number: '02', label: 'Na co myslet' },
-    { href: '#prubeh', number: '03', label: 'Průběh zakázky' },
-    { href: '#otazky', number: '04', label: 'Časté otázky' },
+    { href: '#otazky', number: '03', label: 'Časté otázky' },
   ],
 }) {
   const { navigate } = useNavigation()

@@ -236,7 +236,15 @@ export default function Gallery({
                     onClick={() => handleSlideClick(idx, item)}
                   >
                     <div className="gallery-slide-img-box">
-                      <img src={item.src} alt={item.caption} loading="lazy" />
+                      <picture>
+                        {typeof item.src === 'string' && item.src.endsWith('.jpg') && (
+                          <source srcSet={item.src.replace(/\.jpg$/, '.webp')} type="image/webp" />
+                        )}
+                        {typeof item.src === 'string' && item.src.endsWith('.png') && (
+                          <source srcSet={item.src.replace(/\.png$/, '.webp')} type="image/webp" />
+                        )}
+                        <img src={item.src} alt={item.caption} loading="lazy" decoding="async" width="540" height="278" />
+                      </picture>
                     </div>
                     {showLabels && (
                       <span className="gallery-slide-label">{item.label}</span>

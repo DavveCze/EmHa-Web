@@ -123,11 +123,17 @@ export default function NaCoMysletPriRekonstrukcich() {
       {/* 02: Kuchyň a koupelna */}
       <section className="section sage" id="kuchyn-a-koupelna">
         <div className="container split split-tall">
-          <img
-            src="/assets/electrician.jpg"
-            alt="Příprava elektroinstalace pro spotřebiče"
-            loading="lazy"
-          />
+          <picture>
+            <source srcSet="/assets/electrician.webp" type="image/webp" />
+            <img
+              src="/assets/electrician.jpg"
+              alt="Příprava elektroinstalace pro spotřebiče"
+              loading="lazy"
+              decoding="async"
+              width="540"
+              height="390"
+            />
+          </picture>
           <div>
             <p className="eyebrow">Nejnáročnější zóny</p>
             <h2>

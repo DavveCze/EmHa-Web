@@ -17,7 +17,8 @@ import Reference from './pages/Reference.jsx'
 import Kontakt from './pages/Kontakt.jsx'
 import ZasadyOchranyUdaju from './pages/ZasadyOchranyUdaju.jsx'
 
-const AdminPage = lazy(() => import('./pages/admin/AdminPage.jsx'))
+const IS_CMS_ENABLED = import.meta.env.VITE_CMS_ENABLED !== 'false'
+const AdminPage = IS_CMS_ENABLED ? lazy(() => import('./pages/admin/AdminPage.jsx')) : null
 
 function renderPage(path) {
   switch (path) {
@@ -53,7 +54,7 @@ function renderPage(path) {
 function MainContent() {
   const { currentPath } = useNavigation()
 
-  if (currentPath === '/admin') {
+  if (IS_CMS_ENABLED && AdminPage && currentPath === '/admin') {
     return (
       <Suspense fallback={<div className="admin-loading-screen"><div className="admin-spinner" /><p>Načítám administraci…</p></div>}>
         <AdminPage />
