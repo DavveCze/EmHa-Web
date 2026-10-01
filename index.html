@@ -10,7 +10,11 @@
     <link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="preload" href="/assets/fonts/Inter.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/assets/hero-v2.webp" as="image" type="image/webp" fetchpriority="high" />
+    <link rel="preload" href="/assets/hero-v2-mobile.webp" as="image" type="image/webp" media="(max-width: 768px)" fetchpriority="high" />
+    <link rel="preload" href="/assets/hero-v2.webp" as="image" type="image/webp" media="(min-width: 769px)" fetchpriority="high" />
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+    <link rel="dns-prefetch" href="https://www.clarity.ms" />
+    <link rel="ai-catalog" href="/ai-catalog.json" type="application/json" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Elektroinstalace a rekonstrukce Ostrava | EmHa Elektro" />
     <meta property="og:description" content="Kompletní elektroinstalace rodinných domů, bytů a rekonstrukce v Ostravě a okolí. Poctivé řemeslo, bezpečné rozvody a konzultace zdarma." />

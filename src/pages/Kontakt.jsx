@@ -91,6 +91,10 @@ export default function Kontakt() {
                   <div>IČO: {b.taxID || '14216132'} ({b.isVatPayer ? 'Plátce DPH' : 'neplátce DPH'})</div>
                   <div>Sídlo: {b.street || 'Tlapákova 1242/15'}, {b.city || 'Hrabůvka, 700 30 Ostrava'}</div>
                   <small>{b.registration || 'Fyzická osoba zapsaná v živnostenském rejstříku od 2. 2. 2022 (Živnostenský úřad Ostrava).'}</small>
+                  <div style={{ marginTop: '10px', paddingTop: '10px', borderTop: '1px solid var(--line)', fontSize: '0.85rem', color: 'var(--muted)', lineHeight: '1.5' }}>
+                    <strong>Mimosoudní řešení spotřebitelských sporů (ADR):</strong>
+                    <div>V případě sporu má spotřebitel právo na mimosoudní řešení sporu u České obchodní inspekce (<a href="https://www.coi.cz" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>www.coi.cz</a>).</div>
+                  </div>
                 </div>
               </div>
             </div>

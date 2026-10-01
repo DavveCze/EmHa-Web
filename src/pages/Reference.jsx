@@ -216,10 +216,15 @@ export default function Reference() {
               <p className="eyebrow">Zkušenosti zákazníků</p>
               <h2>Co o naší práci říkají klienti</h2>
             </div>
-            <p>
-              Poctivé řemeslo stavíme na spolehlivé komunikaci, dodržení rozpočtu a pořádku na pracovišti.
-              Na vyžádání vám rádi zprostředkujeme přímý kontakt na reference nebo osobní prohlídku aktuálně probíhající zakázky v Ostravě a okolí.
-            </p>
+            <div>
+              <p style={{ margin: 0, marginBottom: '8px' }}>
+                Poctivé řemeslo stavíme na spolehlivé komunikaci, dodržení rozpočtu a pořádku na pracovišti.
+                Na vyžádání vám rádi zprostředkujeme přímý kontakt na reference nebo osobní prohlídku aktuálně probíhající zakázky v Ostravě a okolí.
+              </p>
+              <p style={{ margin: 0, fontSize: '0.88rem', color: 'var(--muted)' }}>
+                ✓ <strong>Ověřování recenzí:</strong> Všechna hodnocení pocházejí výhradně od našich přímých zákazníků, kterým jsme realizovali elektroinstalaci. Recenze ověřujeme spárováním se zakázkovým listem a fakturací (§ 5a zákona o ochraně spotřebitele).
+              </p>
+            </div>
           </div>
 
           <div className="reviews-grid">

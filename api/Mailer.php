@@ -13,15 +13,50 @@ class Mailer {
     public function __construct(?string $templatesDir = null) {
         $this->templatesDir = $templatesDir ?? __DIR__ . '/templates';
         
-        $envFrom = getenv('MAIL_FROM');
-        $this->defaultFrom = ($envFrom && filter_var($envFrom, FILTER_VALIDATE_EMAIL)) 
-            ? $envFrom 
-            : 'poptavky@emha.cz';
+        $from = self::getConfigValue('MAIL_FROM', 'from', 'info@emha-elektro.cz');
+        $this->defaultFrom = ($from && filter_var($from, FILTER_VALIDATE_EMAIL)) 
+            ? $from 
+            : 'info@emha-elektro.cz';
 
-        $envTo = getenv('MAIL_TO');
-        $this->defaultTo = ($envTo && filter_var($envTo, FILTER_VALIDATE_EMAIL)) 
-            ? $envTo 
-            : 'info@emha.cz';
+        $to = self::getConfigValue('MAIL_TO', 'to', 'mhorcica@emha-elektro.cz');
+        $this->defaultTo = ($to && filter_var($to, FILTER_VALIDATE_EMAIL)) 
+            ? $to 
+            : 'mhorcica@emha-elektro.cz';
+    }
+
+    /**
+     * Resolves configuration value with cascading fallback:
+     * 1. getenv() / $_ENV
+     * 2. $_SERVER (including Apache REDIRECT_ prefixed by mod_rewrite)
+     * 3. api/data/config.php (if available and contains ['mail'])
+     */
+    public static function getConfigValue(string $envKey, ?string $configKey = null, ?string $default = null): ?string {
+        if (!empty(getenv($envKey))) {
+            return (string)getenv($envKey);
+        }
+        if (!empty($_ENV[$envKey])) {
+            return (string)$_ENV[$envKey];
+        }
+        if (!empty($_SERVER[$envKey])) {
+            return (string)$_SERVER[$envKey];
+        }
+        if (!empty($_SERVER['REDIRECT_' . $envKey])) {
+            return (string)$_SERVER['REDIRECT_' . $envKey];
+        }
+
+        // Check api/data/config.php
+        $configFile = __DIR__ . '/data/config.php';
+        if (file_exists($configFile)) {
+            $config = @include $configFile;
+            if (is_array($config) && isset($config['mail']) && is_array($config['mail'])) {
+                $cKey = $configKey ?? strtolower(str_replace('MAIL_', '', $envKey));
+                if (!empty($config['mail'][$cKey])) {
+                    return (string)$config['mail'][$cKey];
+                }
+            }
+        }
+
+        return $default;
     }
 
     /**
@@ -63,8 +98,8 @@ class Mailer {
         $headerString = implode("\r\n", $headers);
         $extraParams = '-f' . escapeshellarg($fromEmail);
         
-        // Optional SMTP delivery if environment credentials are provided
-        if (!empty(getenv('SMTP_HOST'))) {
+        // Optional SMTP delivery if environment or config credentials are provided
+        if (!empty(self::getConfigValue('SMTP_HOST', 'smtpHost'))) {
             $smtpResult = $this->sendViaSmtp($to, $encodedSubject, $htmlBody, $headers);
             if ($smtpResult) {
                 return true;
@@ -85,11 +120,11 @@ class Mailer {
      * Minimal authenticated SMTP sender fallback using socket stream.
      */
     private function sendViaSmtp(string $to, string $subject, string $htmlBody, array $headers): bool {
-        $host = (string)getenv('SMTP_HOST');
-        $port = (int)(getenv('SMTP_PORT') ?: 587);
-        $user = (string)getenv('SMTP_USER');
-        $pass = (string)getenv('SMTP_PASS');
-        $secure = strtolower((string)(getenv('SMTP_SECURE') ?: 'tls'));
+        $host = (string)self::getConfigValue('SMTP_HOST', 'smtpHost', '');
+        $port = (int)(self::getConfigValue('SMTP_PORT', 'smtpPort', '587') ?: 587);
+        $user = (string)self::getConfigValue('SMTP_USER', 'smtpUser', '');
+        $pass = (string)self::getConfigValue('SMTP_PASS', 'smtpPass', '');
+        $secure = strtolower((string)(self::getConfigValue('SMTP_SECURE', 'smtpSecure', 'tls') ?: 'tls'));
 
         $prefix = ($secure === 'ssl') ? 'ssl://' : '';
         $socket = @fsockopen($prefix . $host, $port, $errno, $errstr, 5);

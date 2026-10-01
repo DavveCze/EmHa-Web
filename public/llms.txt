@@ -1,0 +1,18 @@
+# EmHa Elektro
+
+> Kompletní elektroinstalace rodinných domů, bytů a rekonstrukce v Ostravě a Moravskoslezském kraji.
+
+## Hlavní služby
+
+- [Rekonstrukce elektroinstalace](https://emha-elektro.cz/rekonstrukce): Kompletní výměna rozvodů v bytech a rodinných domech.
+- [Elektroinstalace novostaveb](https://emha-elektro.cz/elektroinstalace): Bezpečné a moderní elektrické rozvody na klíč.
+- [Zabezpečení a automatizace](https://emha-elektro.cz/zabezpeceni-a-automatizace): Zabezpečovací systémy Ajax a chytrá domácnost.
+- [Na co myslet při rekonstrukcích](https://emha-elektro.cz/na-co-myslet-pri-rekonstrukcich): Praktický průvodce plánováním elektroinstalace.
+- [Opravy a servis](https://emha-elektro.cz/opravy-a-servis): Pohotovostní servis a opravy elektroinstalací.
+- [Data a slaboproud](https://emha-elektro.cz/data-a-slaboproud): Datové rozvody a slaboproudé instalace.
+
+## O firmě a kontakt
+
+- [O nás a jak pracujeme](https://emha-elektro.cz/jak-pracujeme): Postup realizace a řemeslné standardy.
+- [Reference a realizace](https://emha-elektro.cz/reference): Reálné ukázky zakázek a hodnocení klientů.
+- [Kontakt a poptávka](https://emha-elektro.cz/kontakt): Telefon: +420 731 833 605, email: info@emha-elektro.cz.

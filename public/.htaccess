@@ -9,6 +9,19 @@ AddDefaultCharset UTF-8
 Options -Indexes
 
 # ------------------------------------------------------------------------------
+# 1.1 Ochrana citlivých a skrytých souborů (.env, .git apod.)
+# ------------------------------------------------------------------------------
+<FilesMatch "^\.(env|git|htaccess|htpasswd)">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order deny,allow
+    Deny from all
+  </IfModule>
+</FilesMatch>
+
+# ------------------------------------------------------------------------------
 # 2. Vynucení HTTPS (301 trvalé přesměrování)
 # ------------------------------------------------------------------------------
 <IfModule mod_rewrite.c>
@@ -89,26 +102,45 @@ Options -Indexes
 <IfModule mod_headers.c>
   # Hashované assety ve složce assets/
   <FilesMatch "\.(js|css|webp|png|jpe?g|svg|ttf|woff2)$">
-    Header set Cache-Control "public, max-age=31536000, immutable"
+    Header always set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>
 
   # HTML vstupní bod nesmí být tvrdě cachován, aby se projevily nové verze
   <FilesMatch "(index\.html|sitemap\.xml|robots\.txt)$">
-    Header set Cache-Control "public, max-age=0, must-revalidate"
+    Header always set Cache-Control "no-cache, no-store, must-revalidate, max-age=0, s-maxage=0"
+    Header always set Pragma "no-cache"
+    Header always set Expires "0"
   </FilesMatch>
+
+  # Zákaz cachování pro veškerý text/html obsah (včetně kořenové adresy /)
+  Header always set Cache-Control "no-cache, no-store, must-revalidate, max-age=0, s-maxage=0" "expr=%{CONTENT_TYPE} =~ m#text/html#"
 </IfModule>
 
 # ------------------------------------------------------------------------------
 # 6. API Routing & Single Page Application (SPA) fallback
 # ------------------------------------------------------------------------------
 <IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Bezpečné směrování AI katalogu (i kdyby složka .well-known nebyla na disku)
+  RewriteRule ^\.well-known/ai-catalog\.json$ ai-catalog.json [L]
+
   # Směrování volání API i bez koncovky .php
   RewriteRule ^api/contact/?$ api/contact.php [L]
 
+  # Pokud požadovaný soubor nebo složka reálně existuje na disku, obsluž ji přímo
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
 
-  # Všechny ostatní požadavky směruj na React aplikaci
-  RewriteRule ^ index.html [L]
+  # Neexistující statické assety nesmí propadat do index.html (vrátí korektní 404, ne text/html)
+  RewriteCond %{REQUEST_URI} ^/(assets|uploads|api)/ [NC]
+  RewriteRule ^ - [R=404,L]
+
+  # Pokud je požadavek na index.html, nic nepřepisuj
+  RewriteRule ^index\.html$ - [L]
+
+  # Všechny ostatní virtuální URL (např. /admin, /kontakt, /rekonstrukce) předej Reactu
+  RewriteRule . /index.html [L]
 </IfModule>

@@ -35,7 +35,7 @@ export default function Home() {
         <div className="benefits">
           {benefits.map((b, idx) => (
             <div key={idx}>
-              <h3>{b.title}</h3>
+              <p className="benefit-title">{b.title}</p>
               <p>{b.text}</p>
             </div>
           ))}

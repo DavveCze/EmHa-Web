@@ -1,0 +1,34 @@
+{
+  "specVersion": "1.0",
+  "host": {
+    "displayName": "EmHa Elektro",
+    "url": "https://emha-elektro.cz",
+    "description": "Profesionální elektroinstalace pro novostavby a rekonstrukce bytů i domů v Ostravě a Moravskoslezském kraji."
+  },
+  "entries": [
+    {
+      "identifier": "emha-inquiry-service",
+      "displayName": "Poptávka elektroinstalace a rekonstrukce",
+      "type": "service",
+      "url": "https://emha-elektro.cz/kontakt",
+      "description": "Nezávazná poptávka a konzultace elektroinstalací, rekonstrukcí bytů a zabezpečení Ajax v Ostravě.",
+      "representativeQueries": [
+        "elektroinstalace Ostrava",
+        "rekonstrukce elektřiny v bytě Ostrava",
+        "elektrikář Ostrava poptávka",
+        "zabezpečení domu Ajax Ostrava"
+      ]
+    },
+    {
+      "identifier": "emha-services-catalog",
+      "displayName": "Katalog elektroinstalačních služeb EmHa Elektro",
+      "type": "catalog",
+      "url": "https://emha-elektro.cz/elektroinstalace",
+      "description": "Kompletní nabídka služeb: rozvody, rekonstrukce, chytrá domácnost, zabezpečení a datové sítě.",
+      "representativeQueries": [
+        "služby elektrikáře Ostrava",
+        "revize a zapojení rozvaděče Ostrava"
+      ]
+    }
+  ]
+}

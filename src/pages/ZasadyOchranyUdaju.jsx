@@ -117,6 +117,17 @@ export default function ZasadyOchranyUdaju() {
               ochranou proti brute-force útokům, CSRF tokeny a adresářovými restrikcemi na úrovni webserveru.
             </p>
 
+            <h2 style={{ marginTop: '32px', marginBottom: '12px', fontSize: '1.35rem', color: 'var(--green)' }}>8. Informace pro spotřebitele a mimosoudní řešení sporů (ADR)</h2>
+            <p>
+              Odesláním formuláře na tomto webu dochází k nezávazné poptávce řemeslných služeb, nikoliv k uzavření smlouvy o dílo ani k závazné objednávce s povinností platby. K uzavření smlouvy a stanovení konečné ceny dochází vždy až po vzájemné individuální dohodě, prohlídce a odsouhlasení položkového rozpočtu.
+            </p>
+            <p>
+              V případě vzniku spotřebitelského sporu ze smlouvy o dílo nebo z poskytování služeb, který se nepodaří vyřešit vzájemnou dohodou, má zákazník (spotřebitel) dle zákona č. 634/1992 Sb., o ochraně spotřebitele, právo na mimosoudní řešení sporu. Věcně příslušným subjektem je Česká obchodní inspekce, Ústřední inspektorát – oddělení ADR, Štěpánská 44, 110 00 Praha 1, e-mail: adr@coi.cz, web:{' '}
+              <a href="https://www.coi.cz" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>
+                www.coi.cz
+              </a>.
+            </p>
+
             <div style={{ marginTop: '40px', padding: '20px', background: 'var(--form)', borderRadius: '8px', border: '1px solid var(--line)' }}>
               <p style={{ margin: 0, fontSize: '0.95rem', color: 'var(--text)' }}>
                 Máte dotaz ohledně zpracování osobních údajů nebo chcete uplatnit některé ze svých práv?

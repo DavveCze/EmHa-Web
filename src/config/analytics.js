@@ -8,8 +8,8 @@
  */
 
 export const ANALYTICS_CONFIG = {
-  gaMeasurementId: import.meta.env.VITE_GA_MEASUREMENT_ID || '',
-  clarityProjectId: import.meta.env.VITE_CLARITY_PROJECT_ID || '',
+  gaMeasurementId: import.meta.env.VITE_GA_MEASUREMENT_ID || 'G-7XNY22YM55',
+  clarityProjectId: import.meta.env.VITE_CLARITY_PROJECT_ID || 'yqtth3sc26',
 }
 
 let isInitialized = false

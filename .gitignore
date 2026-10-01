@@ -122,3 +122,6 @@ api/data/revisions/*
 !api/data/revisions/.gitkeep
 public/uploads/*
 !public/uploads/.gitkeep
+.env.production
+docs/smlouva_o_dilo_EmHa_Elektro.docx
+.gitignore

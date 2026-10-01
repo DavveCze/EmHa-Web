@@ -142,6 +142,13 @@ export default function HeroSlider() {
             pointerEvents: 'none',
           }}
         >
+          {idx === 0 && (
+            <source
+              media="(max-width: 768px)"
+              srcSet="/assets/hero-v2-mobile.webp"
+              type="image/webp"
+            />
+          )}
           {typeof s.image === 'string' && s.image.endsWith('.jpg') && (
             <source srcSet={s.image.replace(/\.jpg$/, '.webp')} type="image/webp" />
           )}

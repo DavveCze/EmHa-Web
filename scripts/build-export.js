@@ -79,6 +79,24 @@ function buildCms(outDir = 'dist') {
   console.log(`\n▶ [1/2] Sestavuji PLNÝ WEB s CMS a administrací (Cíl: ${outDir}/)...`)
 
   const outPath = path.join(ROOT_DIR, outDir)
+  const prevAssetsDir = path.join(outPath, 'assets')
+  const preservedAssets = []
+  if (fs.existsSync(prevAssetsDir)) {
+    try {
+      const files = fs.readdirSync(prevAssetsDir)
+      for (const f of files) {
+        if (f.endsWith('.js') || f.endsWith('.css')) {
+          preservedAssets.push({
+            name: f,
+            content: fs.readFileSync(path.join(prevAssetsDir, f)),
+          })
+        }
+      }
+    } catch {
+      // ignore
+    }
+  }
+
   if (fs.existsSync(outPath)) {
     fs.rmSync(outPath, { recursive: true, force: true })
   }
@@ -90,13 +108,44 @@ function buildCms(outDir = 'dist') {
     env: { ...process.env, VITE_CMS_ENABLED: 'true' },
   })
 
+  // Restore preserved assets from previous builds (prevents 404 for cached index.html)
+  const assetsDir = path.join(outPath, 'assets')
+  if (fs.existsSync(assetsDir)) {
+    for (const asset of preservedAssets) {
+      const dest = path.join(assetsDir, asset.name)
+      if (!fs.existsSync(dest)) {
+        fs.writeFileSync(dest, asset.content)
+      }
+    }
+    // Also create known fallback aliases for smooth transition from old deployments
+    const currentJs = fs.readdirSync(assetsDir).find((f) => f.startsWith('index-') && f.endsWith('.js'))
+    const currentCss = fs.readdirSync(assetsDir).find((f) => f.startsWith('index-') && f.endsWith('.css'))
+    if (currentJs) {
+      const legacyJs = ['index-BB2QUr2L.js', 'index-DsnDhBLP.js']
+      for (const leg of legacyJs) {
+        const legPath = path.join(assetsDir, leg)
+        if (!fs.existsSync(legPath)) {
+          fs.copyFileSync(path.join(assetsDir, currentJs), legPath)
+        }
+      }
+    }
+    if (currentCss) {
+      const legacyCss = ['index-BB0oTM6Y.css']
+      for (const leg of legacyCss) {
+        const legPath = path.join(assetsDir, leg)
+        if (!fs.existsSync(legPath)) {
+          fs.copyFileSync(path.join(assetsDir, currentCss), legPath)
+        }
+      }
+    }
+  }
+
   // Copy complete api directory
   const apiSrc = path.join(ROOT_DIR, 'api')
   const apiDest = path.join(outPath, 'api')
   copyDirRecursive(apiSrc, apiDest)
 
   // Verify AdminPage bundle exists
-  const assetsDir = path.join(outPath, 'assets')
   const assetFiles = fs.existsSync(assetsDir) ? fs.readdirSync(assetsDir) : []
   const hasAdminChunk = assetFiles.some((f) => f.startsWith('AdminPage-') && f.endsWith('.js'))
 
